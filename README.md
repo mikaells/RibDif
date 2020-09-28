@@ -28,11 +28,11 @@ parallel --citation
 
 
 ## Usage
-#Run analysis by as follows 
+#Run analysis by as follows (will only work if rRNA_counter/ is in your home directory)
 
 path-to-rRNA_counter/rRNA_counter.sh -g GENUS
 
-An example run with Ruegeria as target genus:
+#An example run with Ruegeria as target genus:
 
 ~/rRNA_counter/rRNA_counter.sh -g Ruegeria
 

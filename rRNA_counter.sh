@@ -115,7 +115,7 @@ find $genus/refseq/bacteria/ -name "*.16S" | parallel 'muscle -in {} -out {.}.16
 #Summarizing data
 echo -e "Summarizing data into $genus/$genus-summary.csv.\n\n"
 echo -e "GCF\tGenus\tSpecies\t#16S\tMean\tSD\tMin\tMaxtTotalDiv" > $genus/$genus-summary.csv
-ls -d $genus/refseq/bacteria/* | parallel Rscript ~/rRNA_analysis/run16sSummary.R {}/ani/ANIm_similarity_errors.tab {}/*16sAln {}/16S_div.pdf {}/*fna {}/*16sTree >> $genus/$genus-summary.csv
+ls -d $genus/refseq/bacteria/* | parallel Rscript ~/rRNA_counter/run16sSummary.R {}/ani/ANIm_similarity_errors.tab {}/*16sAln {}/16S_div.pdf {}/*fna {}/*16sTree >> $genus/$genus-summary.csv
 
 
 wait;
@@ -146,9 +146,9 @@ mafft --auto --quiet --thread 20 $genus/amplicons/$genus-V3V4.amplicons > $genus
 fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplicons/$genus-V3V4.tree
 
 echo -e "Making gene summary file for CLC import.\n\n"
-Rscript ~/rRNA_analysis/Format16STreesForCLC.R $genus/full/$genus.tree $genus/full/$genus-CLC.csv
+Rscript ~/rRNA_counter/Format16STreesForCLC.R $genus/full/$genus.tree $genus/full/$genus-CLC.csv
 
 echo -e "Making amplicon summary file for CLC import.\n\n"
-Rscript ~/rRNA_analysis/Format16STreesForCLC.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-CLC.csv
+Rscript ~/rRNA_counter/Format16STreesForCLC.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-CLC.csv
 
 echo -e "Done.\n\n"

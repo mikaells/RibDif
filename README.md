@@ -6,18 +6,16 @@ Takes an input genus and returns a large set of analysed files, the main being p
 
 ## Installation
 
-clone from github
+Clone from github
+git clone https://github.com/mikaells/rRNA_counter/
 
-git clone 
-https://github.com/mikaells/rRNA_counter/
-
-create conda environment form yml file
+Create conda environment form yml file
 conda env create -f rRNA_counter/rRNA_counter.yml
 
-activate conda environment
+Activate conda environment
 conda activate rRNA
 
-set permissions of files to be executable
+Set permissions of files to be executable
 chmod 755 rRNA_counter/*
 
 Run analysis by as follows

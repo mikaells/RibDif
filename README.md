@@ -22,6 +22,22 @@ conda activate rRNA
 
 chmod 755 rRNA_counter/*
 
+#silence the parallel citation message
+
+parallel --citation   
+
+
+## Usage
 #Run analysis by as follows 
 
 path-to-rRNA_counter/rRNA_counter.sh -g GENUS
+
+An example run with Ruegeria as target genus:
+
+~/rRNA_counter/rRNA_counter.sh -g Ruegeria
+
+## Output
+
+A bunch of stuff
+
+

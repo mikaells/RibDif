@@ -40,6 +40,7 @@ path-to-rRNA_counter/rRNA_counter.sh -g GENUS
 ~/rRNA_counter/rRNA_counter.sh -g Ruegeria
 
 #Can run with species as well, make sure to use quotes
+
 ~/rRNA_counter/rRNA_counter.sh -g "Mycoplasma bovis"
 
 ## Output

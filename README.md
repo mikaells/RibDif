@@ -27,6 +27,9 @@ chmod 755 rRNA_counter/*
 parallel --citation   
 
 
+Note: in_silico_PCR.pl is borrowed from https://github.com/egonozer/in_silico_pcr
+
+
 ## Usage
 #Run analysis by as follows (will only work if rRNA_counter/ is in your home directory)
 

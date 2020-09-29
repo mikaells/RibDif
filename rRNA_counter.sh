@@ -12,6 +12,9 @@ if [ "$#" -lt 2 ]; then
 	exit;
 fi
 
+#working out where script is to avoid problems with being put in strange places
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 #setting global variable, will be overwritten i argument is present
 
 while :
@@ -22,7 +25,7 @@ do
 		exit 0
 		;;
 	-g | --genus)
-		genus="$2"
+		genus_arg="$2"
 		shift 2
 		;;
 	-c | --clobber)
@@ -43,7 +46,18 @@ do
  esac
 done
 
-echo -e "\n***rRNA_counter running on $genus***\n\n"
+echo -e "\n***rRNA_counter running on $genus_arg***\n\n"
+
+
+if [[ $genus_arg =~ " " ]]
+then
+	echo -e "Detected species.\n\n"
+	genus=$(echo "$genus_arg" | sed -r 's/ /_/g')
+else
+	genus=$genus_arg
+fi
+
+
 
 if [[ $clobber = true  ]]
 then
@@ -63,20 +77,19 @@ fi
 
 
 echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n\n";
-ncbi-genome-download -s 'refseq' -F 'fasta' -l 'complete' -g $genus -o $genus -p 10 bacteria
+ncbi-genome-download  -F 'fasta' -l 'complete' --genera "$genus_arg" -o $genus -p 10 bacteria
+
 
 #checking if download worked
 if [ ! -d $suge ]
 then
-	echo -e "\n\tDownload failed, is $genus a correct genus?\n\n"
+	echo -e "\n\tDownload failed, is $genus_arg a correct genus?\n\n"
 	exit
 fi
 
 #gunzip all in parallel
 echo -e "Gunzipping all files.\n\n"
 find $genus/refseq/bacteria/ -name "*gz" | parallel 'gunzip {}'
-
-
 
 #renaming fna-files
 echo -e "Renaming fastas and adding GCF (for genomes with multiple chromosomes).\n\n"
@@ -114,8 +127,8 @@ find $genus/refseq/bacteria/ -name "*.16S" | parallel 'muscle -in {} -out {.}.16
 
 #Summarizing data
 echo -e "Summarizing data into $genus/$genus-summary.csv.\n\n"
-echo -e "GCF\tGenus\tSpecies\t#16S\tMean\tSD\tMin\tMaxtTotalDiv" > $genus/$genus-summary.csv
-ls -d $genus/refseq/bacteria/* | parallel Rscript ~/rRNA_counter/run16sSummary.R {}/ani/ANIm_similarity_errors.tab {}/*16sAln {}/16S_div.pdf {}/*fna {}/*16sTree >> $genus/$genus-summary.csv
+echo -e "GCF\tGenus\tSpecies\t#16S\tMean\tSD\tMin\tMax\tTotalDiv" > $genus/$genus-summary.tsv
+ls -d $genus/refseq/bacteria/* | parallel Rscript $scriptDir/run16sSummary.R {}/ani/ANIm_similarity_errors.tab {}/*16sAln {}/16S_div.pdf {}/*fna {}/*16sTree >> $genus/$genus-summary.tsv
 
 
 wait;
@@ -129,8 +142,8 @@ fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
 echo -e "Making amplicons with in_silico_pcr.\n\n"
 mkdir $genus/amplicons/
-/home/common/scripts/in_silico_PCR.pl -s $genus/full/$genus.16S -a CCTACGGGNGGCNGCAG    -b GACTACNNGGGTATCTAATCC -m -i > $genus/amplicons/$genus-V3V4.summary 2> $genus/amplicons/$genus-V3V4.temp.amplicons
-/home/common/scripts/in_silico_PCR.pl -s $genus/full/$genus.16S -a AGAGTTTGATCCTGGCTCAG -b CGGTTACCTTGTTACGACTT  -m -i > $genus/amplicons/$genus-V1V9.summary 2> $genus/amplicons/$genus-V1V9.temp.amplicons
+$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a CCTACGGGNGGCNGCAG    -b GACTACNNGGGTATCTAATCC -m -i > $genus/amplicons/$genus-V3V4.summary 2> $genus/amplicons/$genus-V3V4.temp.amplicons
+$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a AGAGTTTGATCCTGGCTCAG -b CGGTTACCTTGTTACGACTT  -m -i > $genus/amplicons/$genus-V1V9.summary 2> $genus/amplicons/$genus-V1V9.temp.amplicons
 
 #renaming headers
 seqkit replace --quiet -p "(.+)" -r '{kv}' -k $genus/amplicons/$genus-V3V4.summary $genus/amplicons/$genus-V3V4.temp.amplicons > $genus/amplicons/$genus-V3V4.amplicons
@@ -146,9 +159,9 @@ mafft --auto --quiet --thread 20 $genus/amplicons/$genus-V3V4.amplicons > $genus
 fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplicons/$genus-V3V4.tree
 
 echo -e "Making gene summary file for CLC import.\n\n"
-Rscript ~/rRNA_counter/Format16STreesForCLC.R $genus/full/$genus.tree $genus/full/$genus-CLC.csv
+Rscript $scriptDir/Format16STreesForCLC.R $genus/full/$genus.tree $genus/full/$genus-CLC.csv
 
 echo -e "Making amplicon summary file for CLC import.\n\n"
-Rscript ~/rRNA_counter/Format16STreesForCLC.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-CLC.csv
+Rscript $scriptDir/Format16STreesForCLC.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-CLC.csv
 
 echo -e "Done.\n\n"

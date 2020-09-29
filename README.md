@@ -47,7 +47,7 @@ path-to-rRNA_counter/rRNA_counter.sh -g $genus
 
 The program generates a new directory named after the genus in question. Within that is a summary file and three sub directories:
 
-$genus-summary.csv # contains summary statistics for each genome. Columns 5-8 are in nucleotide mismatches between the genomes' 16S genes, TotalDiv is the cummalative shannon index
+$genus-summary.csv # contains summary statistics for each genome. Columns 5-8 are in nucleotide mismatches between the genomes' 16S genes, TotalDiv is the cummulative shannon index
  
     #GCF     Genus   Species #16S    Mean    SD      Min     Max   TotalDiv 
 
@@ -98,4 +98,4 @@ amplicons/ #files for amplicons
   
 The main files of interest are the trees from full/ and amplicons/ as well as the $genus-summary.csv file.
 
-
+The tree files can be used in any treeviewer or R. The CLC-csv file is formatted for CLC, but is just a table and can be used for other treeviewers supporting annotation.

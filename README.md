@@ -33,7 +33,7 @@ Note: in_silico_PCR.pl is borrowed from https://github.com/egonozer/in_silico_pc
 ## Usage
 #Run analysis by as follows 
 
-path-to-rRNA_counter/rRNA_counter.sh -g GENUS
+path-to-rRNA_counter/rRNA_counter.sh -g $genus
 
 #An example run with Ruegeria as target genus:
 
@@ -48,7 +48,8 @@ path-to-rRNA_counter/rRNA_counter.sh -g GENUS
 The program generates a new directory named after the genus in question. Within that is a summary file and three sub directories:
 
 $genus-summary.csv # contains summary statistics for each genome. Columns 5-8 are in nucleotide mismatches between the genomes' 16S genes, TotalDiv is the cummalative shannon index
-  #GCF     Genus   Species #16S    Mean    SD      Min     Max   TotalDiv 
+ 
+    #GCF     Genus   Species #16S    Mean    SD      Min     Max   TotalDiv 
 
 refseq/bacteria/ #contains a folder for each genome, named after refseq-identifier
 

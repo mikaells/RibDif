@@ -31,13 +31,16 @@ Note: in_silico_PCR.pl is borrowed from https://github.com/egonozer/in_silico_pc
 
 
 ## Usage
-#Run analysis by as follows (will only work if rRNA_counter/ is in your home directory)
+#Run analysis by as follows 
 
 path-to-rRNA_counter/rRNA_counter.sh -g GENUS
 
 #An example run with Ruegeria as target genus:
 
 ~/rRNA_counter/rRNA_counter.sh -g Ruegeria
+
+#Can run with species as well, make sure to use quotes
+~/rRNA_counter/rRNA_counter.sh -g "Mycoplasma bovis"
 
 ## Output
 

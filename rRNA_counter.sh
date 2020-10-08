@@ -93,7 +93,7 @@ find $genus/refseq/bacteria/ -name "*gz" | parallel 'gunzip {}'
 
 #renaming fna-files
 echo -e "Renaming fastas and adding GCF (for genomes with multiple chromosomes).\n\n"
-find $genus/refseq/bacteria/ -name "*fna" | parallel 'sed -i "s/[:,/()]//g; s/[: ]/_/g" {} '
+find $genus/refseq/bacteria/ -name "*fna" | parallel 'sed -i "s/[:,/()=]//g; s/[: ]/_/g" {} '
 find $genus/refseq/bacteria/ -name "*fna" | parallel ' GCF=$(echo $(basename $(dirname {})));  sed -E -i "s/^>(.*)/>$GCF"_"\1/g" {} '
 
 #run barrnap

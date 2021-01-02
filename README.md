@@ -22,7 +22,7 @@ conda activate rRNA
 
 chmod 755 rRNA_counter/*
 
-#silence the parallel citation message
+#silence the parallel citation message (and do with the message what you wish)
 
 parallel --citation   
 

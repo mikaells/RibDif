@@ -81,7 +81,7 @@ ncbi-genome-download  -F 'fasta' -l 'complete' --genera "$genus_arg" -o $genus -
 
 
 #checking if download worked
-if [ ! -d $suge ]
+if [ ! -d $genus ]
 then
 	echo -e "\n\tDownload failed, is $genus_arg a correct genus?\n\n"
 	exit
@@ -142,8 +142,8 @@ fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
 echo -e "Making amplicons with in_silico_pcr.\n\n"
 mkdir $genus/amplicons/
-$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a CCTACGGGNGGCNGCAG    -b GACTACNNGGGTATCTAATCC -m -i > $genus/amplicons/$genus-V3V4.summary 2> $genus/amplicons/$genus-V3V4.temp.amplicons
-$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a AGAGTTTGATCCTGGCTCAG -b CGGTTACCTTGTTACGACTT  -m -i > $genus/amplicons/$genus-V1V9.summary 2> $genus/amplicons/$genus-V1V9.temp.amplicons
+$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a CCTACGGGNGGCNGCAG    -b GACTACNNGGGTATCTAATCC -m -i -r > $genus/amplicons/$genus-V3V4.summary 2> $genus/amplicons/$genus-V3V4.temp.amplicons
+$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a AGAGTTTGATCCTGGCTCAG -b CGGTTACCTTGTTACGACTT  -m -i -r > $genus/amplicons/$genus-V1V9.summary 2> $genus/amplicons/$genus-V1V9.temp.amplicons
 
 #renaming headers
 seqkit replace --quiet -p "(.+)" -r '{kv}' -k $genus/amplicons/$genus-V3V4.summary $genus/amplicons/$genus-V3V4.temp.amplicons > $genus/amplicons/$genus-V3V4.amplicons

@@ -162,9 +162,9 @@ mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-V3
 fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplicons/$genus-V3V4.tree
 
 echo -e "Making gene summary file for treeviewer import.\n\n"
-Rscript $scriptDir/Format16STreesFor.R $genus/full/$genus.tree $genus/full/$genus-meta.csv
+Rscript $scriptDir/Format16STrees.R $genus/full/$genus.tree $genus/full/$genus-meta.csv
 
 echo -e "Making amplicon summary file for treeviewer import.\n\n"
-Rscript $scriptDir/Format16STreesFor.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv
+Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv
 
 echo -e "Done.\n\n"

@@ -2,8 +2,8 @@
 
 ####
 #A program to analyse the 16s variation in each genome of a genus
-#Mikael Lenz Strube & Mikkel Lindegaard
-#14-09-2020
+#Mikael Lenz Strube
+#10-02-2021
 ####
 
 #Input sanitation
@@ -15,8 +15,7 @@ fi
 #working out where script is to avoid problems with being put in strange places
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-#setting global variable, will be overwritten i argument is present
-
+#Working out command line arguments
 while :
 do
  case "$1" in
@@ -46,9 +45,12 @@ do
  esac
 done
 
+#find and set cpus
+Ncpu=$( nproc )
+
 echo -e "\n***rRNA_counter running on $genus_arg***\n\n"
 
-
+#if there is a space in the genus argument, assume a species
 if [[ $genus_arg =~ " " ]]
 then
 	echo -e "Detected species.\n\n"
@@ -58,7 +60,7 @@ else
 fi
 
 
-
+#delete previous run if clobber is true
 if [[ $clobber = true  ]]
 then
 	echo -e "Removing old run of $genus."
@@ -76,8 +78,9 @@ then
 fi
 
 
+#Use ncbi-genome-download for downloading genus/species
 echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n\n";
-ncbi-genome-download  -F 'fasta' -l 'complete' --genera "$genus_arg" -o $genus -p 10 bacteria
+ncbi-genome-download  -F 'fasta' -l 'complete' --genera "$genus_arg" -o $genus -p $((Ncpu*2)) bacteria
 
 
 #checking if download worked
@@ -89,24 +92,24 @@ fi
 
 #gunzip all in parallel
 echo -e "Gunzipping all files.\n\n"
-find $genus/refseq/bacteria/ -name "*gz" | parallel 'gunzip {}'
+find $genus/refseq/bacteria/ -name "*gz" | parallel -j $Ncpu 'gunzip {}'
 
 #renaming fna-files
 echo -e "Renaming fastas and adding GCF (for genomes with multiple chromosomes).\n\n"
-find $genus/refseq/bacteria/ -name "*fna" | parallel 'sed -i "s/[:,/()=]//g; s/[: ]/_/g" {} '
-find $genus/refseq/bacteria/ -name "*fna" | parallel ' GCF=$(echo $(basename $(dirname {})));  sed -E -i "s/^>(.*)/>$GCF"_"\1/g" {} '
+find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu 'sed -i "s/[:,/()=]//g; s/[: ]/_/g" {} '
+find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu ' GCF=$(echo $(basename $(dirname {})));  sed -E -i "s/^>(.*)/>$GCF"_"\1/g" {} '
 
 #run barrnap
 echo -e "Finding all rRNA genes longer than 90% of expected length with barrnap.\n\n"
-find $genus/refseq/bacteria/ -name "*fna" | parallel ' barrnap --kingdom "bac" --quiet --threads 1 --reject 0.90 -o "{.}.rRNA" {}'  > barrnap.log 2>&1
+find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu ' barrnap --kingdom "bac" --quiet --threads 1 --reject 0.90 -o "{.}.rRNA" {}'  > barrnap.log 2>&1
 
 #fish out 16S
 echo -e "Fishing out 16S genes.\n\n"
-find $genus/refseq/bacteria/ -name "*rRNA" | parallel 'grep "16S" {} -A1 > {.}.16S'
+find $genus/refseq/bacteria/ -name "*rRNA" | parallel -j $Ncpu 'grep "16S" {} -A1 > {.}.16S'
 
 #renaming headers in 16s
 echo -e "Renaming 16S headers.\n\n"
-find $genus/refseq/bacteria/ -name "*.16S" | parallel ' sed -E -i "s/^>16S_rRNA::(.*):.*/>\1_/g" {} ; awk -i inplace "/^>/ { \$0=\$0"_"++i }1" {}  '
+find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu ' sed -E -i "s/^>16S_rRNA::(.*):.*/>\1_/g" {} ; awk -i inplace "/^>/ { \$0=\$0"_"++i }1" {}  '
 
 #run splitting 16S, cant make it work in parallel
 echo -e "Splitting 16S.\n\n"
@@ -120,15 +123,15 @@ done
 
 #calculating ANI for each genome
 echo -e "Calculating mismatches for each genome with ANI.\n\n"
-ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel 'average_nucleotide_identity.py -i {} -o {}/../ani/'
+ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel -j $Ncpu 'average_nucleotide_identity.py -i {} -o {}/../ani/'
 
 echo -e "Alligning 16S genes within genomes with muscle and builing trees with fastree.\n\n"
-find $genus/refseq/bacteria/ -name "*.16S" | parallel 'muscle -in {} -out {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
+find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu 'muscle -in {} -out {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
 
 #Summarizing data
 echo -e "Summarizing data into $genus/$genus-summary.csv.\n\n"
 echo -e "GCF\tGenus\tSpecies\t#16S\tMean\tSD\tMin\tMax\tTotalDiv" > $genus/$genus-summary.tsv
-ls -d $genus/refseq/bacteria/* | parallel Rscript $scriptDir/run16sSummary.R {}/ani/ANIm_similarity_errors.tab {}/*16sAln {}/16S_div.pdf {}/*fna {}/*16sTree >> $genus/$genus-summary.tsv
+ls -d $genus/refseq/bacteria/* | parallel -j $Ncpu Rscript $scriptDir/run16sSummary.R {}/ani/ANIm_similarity_errors.tab {}/*16sAln {}/16S_div.pdf {}/*fna {}/*16sTree >> $genus/$genus-summary.tsv
 
 
 wait;
@@ -137,13 +140,13 @@ mkdir $genus/full
 find $genus/refseq/bacteria/ -name "*16S" -exec cat {}  \; > $genus/full/$genus.16S
 
 echo -e "Alligning all 16S rRNA genes with mafft and building tree with fasttree.\n\n"
-mafft --auto --quiet --thread 20 $genus/full/$genus.16S > $genus/full/$genus.aln
+mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/full/$genus.16S > $genus/full/$genus.aln
 fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
 echo -e "Making amplicons with in_silico_pcr.\n\n"
 mkdir $genus/amplicons/
-$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a CCTACGGGNGGCNGCAG    -b GACTACNNGGGTATCTAATCC -m -i -r > $genus/amplicons/$genus-V3V4.summary 2> $genus/amplicons/$genus-V3V4.temp.amplicons
-$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a AGAGTTTGATCCTGGCTCAG -b CGGTTACCTTGTTACGACTT  -m -i -r > $genus/amplicons/$genus-V1V9.summary 2> $genus/amplicons/$genus-V1V9.temp.amplicons
+$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a CCTACGGGNGGCNGCAG    -b GACTACNNGGGTATCTAATCC -r -m -i > $genus/amplicons/$genus-V3V4.summary 2> $genus/amplicons/$genus-V3V4.temp.amplicons
+$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a AGAGTTTGATCCTGGCTCAG -b CGGTTACCTTGTTACGACTT  -r -m -i > $genus/amplicons/$genus-V1V9.summary 2> $genus/amplicons/$genus-V1V9.temp.amplicons
 
 #renaming headers
 seqkit replace --quiet -p "(.+)" -r '{kv}' -k $genus/amplicons/$genus-V3V4.summary $genus/amplicons/$genus-V3V4.temp.amplicons > $genus/amplicons/$genus-V3V4.amplicons
@@ -155,7 +158,7 @@ rm $genus/amplicons/$genus-V3V4.temp.amplicons
 rm $genus/amplicons/$genus-V1V9.temp.amplicons
 
 echo -e "Alligning all amplicons with mafft and building tree with fasttree.\n\n"
-mafft --auto --quiet --thread 20 $genus/amplicons/$genus-V3V4.amplicons > $genus/amplicons/$genus-V3V4.aln
+mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-V3V4.amplicons > $genus/amplicons/$genus-V3V4.aln
 fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplicons/$genus-V3V4.tree
 
 echo -e "Making gene summary file for CLC import.\n\n"

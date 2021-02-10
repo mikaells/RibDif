@@ -1,4 +1,4 @@
-name: rRNA
+name: rRNA_counter
 channels:
   - bioconda
   - conda-forge

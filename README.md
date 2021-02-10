@@ -3,6 +3,8 @@ Count and compare 16S rRNA genes within a genome
 
 Takes an input genus and returns a large set of analysed files, the main being phylogenetic trees of full length 16S rRNA genes and common amplicons thereof.
 
+This can be useful for determining if species resolution is possible within certain genera using common metataxonomic approaches
+
 
 ## Installation
 
@@ -16,7 +18,7 @@ conda env create -f rRNA_counter/rRNA_counter.yml
 
 #Activate conda environment 
 
-conda activate rRNA
+conda activate rRNA_counter
 
 #Set permissions of files to be executable 
 

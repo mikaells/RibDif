@@ -161,10 +161,10 @@ echo -e "Alligning all amplicons with mafft and building tree with fasttree.\n\n
 mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-V3V4.amplicons > $genus/amplicons/$genus-V3V4.aln
 fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplicons/$genus-V3V4.tree
 
-echo -e "Making gene summary file for CLC import.\n\n"
-Rscript $scriptDir/Format16STreesForCLC.R $genus/full/$genus.tree $genus/full/$genus-CLC.csv
+echo -e "Making gene summary file for treeviewer import.\n\n"
+Rscript $scriptDir/Format16STreesFor.R $genus/full/$genus.tree $genus/full/$genus-meta.csv
 
-echo -e "Making amplicon summary file for CLC import.\n\n"
-Rscript $scriptDir/Format16STreesForCLC.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-CLC.csv
+echo -e "Making amplicon summary file for treeviewer import.\n\n"
+Rscript $scriptDir/Format16STreesFor.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv
 
 echo -e "Done.\n\n"

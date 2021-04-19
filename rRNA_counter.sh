@@ -8,7 +8,7 @@
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false].\n\n"
+	echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false]\n\t[-a|--ANI true/false.\n\n"
 	exit;
 fi
 
@@ -20,7 +20,7 @@ while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false].\n\n"
+		echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false]\n\t[-a|--ANI true/false .\n\n"
 		exit 0
 		;;
 	-g | --genus)
@@ -29,6 +29,10 @@ do
 		;;
 	-c | --clobber)
 		clobber=$2
+		shift 2
+		;;
+	-a | --ANI)
+		ANI=$2
 		shift 2
 		;;
 	--)
@@ -79,9 +83,9 @@ fi
 
 
 #Use ncbi-genome-download for downloading genus/species
-echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n\n";
+echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n";
 ncbi-genome-download  -F 'fasta' -l 'complete' --genera "$genus_arg" -o $genus -p $((Ncpu*2)) bacteria
-
+echo -e "\t$(ls $genus/refseq/bacteria/ | wc -l) genomes downloaded.\n\n"
 
 #checking if download worked
 if [ ! -d $genus ]
@@ -96,7 +100,7 @@ find $genus/refseq/bacteria/ -name "*gz" | parallel -j $Ncpu 'gunzip {}'
 
 #renaming fna-files
 echo -e "Renaming fastas and adding GCF (for genomes with multiple chromosomes).\n\n"
-find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu 'sed -i "s/[:,/()=]//g; s/[: ]/_/g" {} '
+find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu 'sed -i "s/[:,/()=#]//g; s/[: ]/_/g" {} '
 find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu ' GCF=$(echo $(basename $(dirname {})));  sed -E -i "s/^>(.*)/>$GCF"_"\1/g" {} '
 
 #run barrnap
@@ -122,8 +126,13 @@ for folder in $genus/refseq/bacteria/*; do
 done
 
 #calculating ANI for each genome
-echo -e "Calculating mismatches for each genome with ANI.\n\n"
-ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel -j $Ncpu 'average_nucleotide_identity.py -i {} -o {}/../ani/'
+if [[ $ANI = false  ]]
+then
+	echo -e "Skipping detailed intra-genomic analysis and ANI.\n\n"
+else
+	echo -e "Calculating intra-genomic mismatches and ANI for each genome .\n\n"
+	ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel -j $Ncpu 'average_nucleotide_identity.py -i {} -o {}/../ani/'
+fi
 
 echo -e "Alligning 16S genes within genomes with muscle and builing trees with fastree.\n\n"
 find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu 'muscle -in {} -out {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
@@ -161,10 +170,18 @@ echo -e "Alligning all amplicons with mafft and building tree with fasttree.\n\n
 mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-V3V4.amplicons > $genus/amplicons/$genus-V3V4.aln
 fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplicons/$genus-V3V4.tree
 
-echo -e "Making gene summary file for treeviewer import.\n\n"
-Rscript $scriptDir/Format16STrees.R $genus/full/$genus.tree $genus/full/$genus-meta.csv
+echo -e "Making unique clusters with vsearch.\n\n"
+mkdir $genus/amplicons/V3V4-clusters
+vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id 1 --uc $genus/amplicons/$genus-V3V4.uc --clusters $genus/amplicons/V3V4-clusters/Pseudoalteromonas-V3V4_clus --quiet
 
-echo -e "Making amplicon summary file for treeviewer import.\n\n"
-Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv
+#echo -e "Making whole gene summary file for tree viewer import.\n\n"
+#Rscript $scriptDir/Format16STrees.R $genus/full/$genus.tree $genus/full/$genus-meta.csv
 
-echo -e "Done.\n\n"
+echo -e "Making amplicon summary file for tree viewer import.\n\n"
+Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv $genus/amplicons/$genus-V3V4.uc
+
+echo -e "Making amplicon cluster membership heatmaps.\n\n"
+Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-V3V4.uc $genus/amplicons/$genus-V3V4-heatmap.pdf
+
+
+echo -e "\nDone.\n\n"

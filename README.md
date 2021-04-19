@@ -24,7 +24,7 @@ conda activate rRNA_counter
 
 chmod 755 rRNA_counter/*
 
-#silence the parallel citation message (and do with the message what you wish)
+#silence the parallel citation message if need be (and do with the message what you wish)
 
 parallel --citation   
 
@@ -45,15 +45,16 @@ path-to-rRNA_counter/rRNA_counter.sh -g $genus
 
 ~/rRNA_counter/rRNA_counter.sh -g "Mycoplasma bovis"
 
+
+Running Ruegeria will take a minute or two, while large genera like Bacillus might take more than an hour as it has 7000+ genomes with 10+ 16S genes.
+
+
 ## Output
 
 The program generates a new directory named after the genus in question. Within that is a summary file and three sub directories.
 
 The main files of interest for amplicon metataxonomic analysis is the amplicon/ folder.
 
-$genus-summary.csv # contains summary statistics for each genome. Columns 5-8 are in nucleotide mismatches between the genomes' 16S genes, TotalDiv is the cummulative shannon index
- 
-    #GCF     Genus   Species #16S    Mean    SD      Min     Max   TotalDiv 
 
 amplicons/ #files for amplicons
   
@@ -84,5 +85,11 @@ refseq/bacteria/ #contains a folder for each genome, named after refseq-identifi
     x.fna #16s files  
     ani/ # files generated from pyani
 
+
+$genus-summary.csv # contains summary statistics for each genome. Columns 5-8 are in nucleotide mismatches between the genomes' 16S genes, TotalDiv is the cummulative shannon index
+ 
+    #GCF     Genus   Species #16S    Mean    SD      Min     Max   TotalDiv 
+
+
   
-The tree files can be used in any treeviewer or R. The meta.csv file is formatted for CLC, but is just a table and can be used for other treeviewers supporting annotation.
+The tree files are just newick-files and can be used in any treeviewer or R. The meta.csv file is formatted for CLC, but is just a table and can be used for other treeviewers supporting annotation.

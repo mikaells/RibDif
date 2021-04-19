@@ -49,7 +49,7 @@ path-to-rRNA_counter/rRNA_counter.sh -g $genus
 
 The program generates a new directory named after the genus in question. Within that is a summary file and three sub directories.
 
-The main files of interest if you are looking for amplicon metataxonomic analysis is the amplicon/ folder.
+The main files of interest for amplicon metataxonomic analysis is the amplicon/ folder.
 
 $genus-summary.csv # contains summary statistics for each genome. Columns 5-8 are in nucleotide mismatches between the genomes' 16S genes, TotalDiv is the cummulative shannon index
  
@@ -60,14 +60,16 @@ amplicons/ #files for amplicons
     $genus-$region.16S # all 16S genes  
     $genus-$region.aln # alligned from 16S genes (alligned by mafft)  
     $genus-$region.tree # tree from allignment  
-    $genus-$region-meta.csv # summary file for import into CLC
+    $genus-$region-meta.csv # metadata for each sequence
+    $genus-$region-heatmap.pdf # heatmap of 1) clusters found in each genome and 2) genomes that would overlap with given primers
+    $region-clusters/ #amplicons clustered into unique clusters by vsearch, in fasta format
     
 full/ # files for full length 16S analysis
   
     $genus.16S # all 16S genes  
     $genus.aln # alligned from 16S genes (alligned by mafft)  
     $genus.tree # tree from allignment  
-    $genus-meta.csv # summary file for import into CLC  
+    $genus-meta.csv # metadata for each sequence  
 
 refseq/bacteria/ #contains a folder for each genome, named after refseq-identifier
 
@@ -83,9 +85,4 @@ refseq/bacteria/ #contains a folder for each genome, named after refseq-identifi
     ani/ # files generated from pyani
 
   
-
-
-    
-
-
-The tree files can be used in any treeviewer or R. The CLC-csv file is formatted for CLC, but is just a table and can be used for other treeviewers supporting annotation.
+The tree files can be used in any treeviewer or R. The meta.csv file is formatted for CLC, but is just a table and can be used for other treeviewers supporting annotation.

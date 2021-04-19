@@ -101,7 +101,8 @@ pheatmap(pairwiseMatch,  annotation_colors =annot_cols,
 				   
 garbage <- dev.off()
 
-write.table(x = pairwiseMatch,file = gsub(outPath,"pdf","csv"),row.names = rowAnnotVec,sep = ";")
+write.table(x = pairwiseMatch,file = gsub("pdf","csv",outPath),col.names = c("",colnames(pairwiseMatch)),
+            row.names = rowAnnotVec,sep = ";")
 
 TotGCF=NROW(clusterMat)
 multiAllele=length(which(rowSums(ifelse(clusterMat>0,1,0))>1))

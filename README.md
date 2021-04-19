@@ -53,7 +53,7 @@ Running Ruegeria will take a minute or two, while large genera like Bacillus mig
 
 The program generates a new directory named after the genus in question. Within that is a summary file and three sub directories.
 
-The main files of interest for amplicon metataxonomic analysis is the amplicon/ folder.
+The main files of interest for amplicon metataxonomic analysis is the amplicon/ folder. The heatmap pdf is the most important one, as it shows which species overlap.
 
 
 amplicons/ #files for amplicons

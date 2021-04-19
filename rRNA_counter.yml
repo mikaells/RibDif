@@ -3,7 +3,6 @@ channels:
   - bioconda
   - conda-forge
   - defaults
-  - r
 dependencies:
   - _libgcc_mutex=0.1=conda_forge
   - _openmp_mutex=4.5=1_gnu
@@ -23,9 +22,9 @@ dependencies:
   - bwidget=1.9.14=0
   - bzip2=1.0.8=h516909a_3
   - c-ares=1.11.0=h470a237_1
-  - ca-certificates=2020.6.20=hecda079_0
+  - ca-certificates=2021.4.13=h06a4308_1
   - cairo=1.16.0=h3fc0475_1005
-  - certifi=2020.6.20=py38h32f6830_0
+  - certifi=2020.12.5=py38h06a4308_0
   - cffi=1.14.3=py38h5bae8af_0
   - cfitsio=3.470=hce51eda_6
   - chardet=3.0.4=py38h32f6830_1007
@@ -105,10 +104,11 @@ dependencies:
   - muscle=3.8.1551=hc9558a2_5
   - ncbi-genome-download=0.3.0=pyh864c0ab_1
   - ncurses=6.2=he1b5a44_1
+  - niemads=1.0.14=pyh3252c3a_0
   - numpy=1.19.1=py38hbc27379_2
   - olefile=0.46=py_0
   - openjpeg=2.3.1=h981e76c_3
-  - openssl=1.1.1h=h516909a_0
+  - openssl=1.1.1k=h27cfd23_0
   - pandas=1.1.2=py38h950e882_0
   - pango=1.42.4=h7062337_4
   - parallel=20200922=0
@@ -262,6 +262,7 @@ dependencies:
   - r-nnet=7.3_14=r36hcdcec82_1
   - r-openssl=1.4.3=r36he5c4762_0
   - r-permute=0.9_5=r36h6115d3f_3
+  - r-pheatmap=1.0.12=r36h6115d3f_0
   - r-phylobase=0.8.6=r36h0357c0b_2
   - r-pillar=1.4.6=r36h6115d3f_0
   - r-pixmap=0.4_11=r36h6115d3f_1003
@@ -335,6 +336,8 @@ dependencies:
   - tk=8.6.10=hed695b0_0
   - tktable=2.10=h555a92e_3
   - tornado=6.0.4=py38h1e0a361_1
+  - treecluster=1.0.3=pyh3252c3a_0
+  - treeswift=1.1.15=pyh5e36f6f_0
   - tzcode=2020a=h516909a_0
   - udunits2=2.2.27.6=h4e0c4b3_1001
   - urllib3=1.25.10=py_0
@@ -365,4 +368,5 @@ dependencies:
     - plac==1.2.0
     - sortedcontainers==2.2.2
     - toml==0.10.1
-prefix: /home/milst/miniconda3/envs/rRNA
+prefix: /home/milst/miniconda3/envs/rRNA_counter
+

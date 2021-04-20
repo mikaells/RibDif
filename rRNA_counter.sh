@@ -8,7 +8,7 @@
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false]\n\t[-a|--ANI true/false.\n\n"
+	echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false]\n\t[-a|--ANI true/false]\n\t[-f|--frag true/false].\n\n"
 	exit;
 fi
 
@@ -20,7 +20,7 @@ while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false]\n\t[-a|--ANI true/false .\n\n"
+		echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false]\n\t[-a|--ANI true/false]\n\t[-f|--frag true/false].\n\n"
 		exit 0
 		;;
 	-g | --genus)
@@ -33,6 +33,10 @@ do
 		;;
 	-a | --ANI)
 		ANI=$2
+		shift 2
+		;;
+	-f | --frag)
+		frag=$2
 		shift 2
 		;;
 	--)
@@ -84,7 +88,13 @@ fi
 
 #Use ncbi-genome-download for downloading genus/species
 echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n";
-ncbi-genome-download  -F 'fasta' -l 'complete' --genera "$genus_arg" -o $genus -p $((Ncpu*2)) bacteria
+if [[ $frag = true  ]]
+then
+	ncbi-genome-download  -F 'fasta' --genera "$genus_arg" -o $genus -p $((Ncpu*2)) bacteria
+else
+	ncbi-genome-download  -F 'fasta' -l 'complete' --genera "$genus_arg" -o $genus -p $((Ncpu*2)) bacteria
+fi
+
 echo -e "\t$(ls $genus/refseq/bacteria/ | wc -l) genomes downloaded.\n\n"
 
 #checking if download worked

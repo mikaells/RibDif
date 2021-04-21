@@ -8,7 +8,7 @@
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false]\n\t[-a|--ANI true/false]\n\t[-f|--frag true/false].\n\n"
+	echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes].\n\n"
 	exit;
 fi
 
@@ -24,7 +24,7 @@ while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber true/false]\n\t[-a|--ANI true/false]\n\t[-f|--frag true/false].\n\n"
+		echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes].\n\n"
 		exit 0
 		;;
 	-g | --genus)

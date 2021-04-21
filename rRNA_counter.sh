@@ -81,11 +81,11 @@ then
 		rm -r $genus
 		echo -e "\n"
 	else
-		echo -e "\t$genus-folder does not exist, ignoring --clobber\n\n"
+		echo -e "\t$genus-folder does not exist, ignoring -c/--clobber\n\n"
 	fi
 elif [[ -d $genus ]]
 then
-	echo -e "$genus-folder already exists, run again with --clobber true or find another folder to run in.\n\n"
+	echo -e "$genus-folder already exists, run again with c/--clobber  or find another folder to run in.\n\n"
 	exit
 fi
 

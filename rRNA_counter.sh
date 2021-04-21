@@ -16,6 +16,10 @@ fi
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 #Working out command line arguments
+clobber=false
+ANI=false
+frag=false
+
 while :
 do
  case "$1" in
@@ -28,16 +32,16 @@ do
 		shift 2
 		;;
 	-c | --clobber)
-		clobber=$2
-		shift 2
+		clobber=true
+		shift
 		;;
 	-a | --ANI)
-		ANI=$2
-		shift 2
+		ANI=true
+		shift
 		;;
 	-f | --frag)
-		frag=$2
-		shift 2
+		frag=true
+		shift
 		;;
 	--)
 		shift
@@ -90,6 +94,7 @@ fi
 echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n";
 if [[ $frag = true  ]]
 then
+	echo -e "\tIncluding non-complete genomes.\n"
 	ncbi-genome-download  -F 'fasta' --genera "$genus_arg" -o $genus -p $((Ncpu*2)) bacteria
 else
 	ncbi-genome-download  -F 'fasta' -l 'complete' --genera "$genus_arg" -o $genus -p $((Ncpu*2)) bacteria

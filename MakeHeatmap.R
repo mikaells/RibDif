@@ -9,16 +9,22 @@ args=commandArgs(trailingOnly = TRUE);
 ucPath  = args[1]
 outPath = args[2]
 
-
 #read cluster file
 ucFile=read.table(ucPath)
 
 #removing cluster summaries
 ucFile=ucFile[-grep("C",ucFile$V1),]
 
+
 #get GCF and species from names
 ucFile$GCF=apply(str_split_fixed(ucFile$V9,"_", 8)[,1:2] , 1 , paste , collapse = "_" )
 ucFile$species=str_split_fixed(ucFile$V9,"_", 8)[,6]
+
+ucFile=ucFile[order(ucFile$species,ucFile$GCF),]
+
+if(length(which(ucFile$species=="sp."))) {
+  ucFile=rbind(ucFile[-c(ucFile$species=="sp."),],ucFile[-c(ucFile$species=="sp."),])
+}
 
 #create empty matrix for storing cluster abundances
 #rows are GCFs and cols are clusters
@@ -90,6 +96,8 @@ cols=colfunc(length(unique(rowAnnot$Species)))
 annot_cols=list(Species=cols[factor(unique(rowAnnot$Species))])
 names(annot_cols$Species)=unique(rowAnnot$Species)
 
+annot_cols$Species[which(names(annot_cols$Species)=="sp.")]="grey"
+
 pdf(outPath, onefile=T)
 
 pheatmap(clusterMat, cluster_rows = T, 
@@ -97,7 +105,7 @@ pheatmap(clusterMat, cluster_rows = T,
                    number_format = "%.0f", annotation_row = rowAnnot )
 
 pheatmap(pairwiseMatch,  annotation_colors =annot_cols,  
-          annotation_row = rowAnnot, labels_row = rowAnnotVec)
+          annotation_row = rowAnnot, labels_row = rowAnnotVec, clustering_method = "ward.D2")
 				   
 garbage <- dev.off()
 

@@ -115,7 +115,8 @@ find $genus/refseq/bacteria/ -name "*gz" | parallel -j $Ncpu 'gunzip {}'
 
 #renaming fna-files
 echo -e "Renaming fastas and adding GCF (for genomes with multiple chromosomes).\n\n"
-find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu 'sed -i "s/[:,/()=#]//g; s/[: ]/_/g" {} '
+#people should really think about the names they give their genomes
+find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu 'sed -i "s/[:,/()=#\0x27]//g; s/[: ]/_/g" {} '
 find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu ' GCF=$(echo $(basename $(dirname {})));  sed -E -i "s/^>(.*)/>$GCF"_"\1/g" {} '
 
 #run barrnap

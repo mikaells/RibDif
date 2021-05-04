@@ -200,7 +200,7 @@ multiAllele=length(which(rowSums(ifelse(clusterMat>0,1,0))>1))
 
 if(length(unique(combinations))>0){
   unqCombs=unique(combinations)
-  unqCombs[order(nchar(unqCombs),order(unqCombs),decreasing = T)]
+  unqCombs=unqCombs[order(nchar(unqCombs),order(unqCombs),decreasing = T)]
   max_nOverlaps=max(str_count(combinations,pattern = "/")+1)
   #counting species that overlap by counting '/'
   hasOverlap=unique(as.character(str_split_fixed(combinations,pattern = "/",n = max_nOverlaps)))

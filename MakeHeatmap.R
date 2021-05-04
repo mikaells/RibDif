@@ -234,6 +234,6 @@ cat(summaryString)
 
 #add to log file
 sink(file =  gsub("heatmap.pdf","overlap-summary.txt",outPath))
-summaryString
+cat(summaryString)
 sink()
 

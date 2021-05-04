@@ -196,7 +196,11 @@ TotGCF=NROW(clusterMat)
 #n genomes with multiple alleles
 multiAllele=length(which(rowSums(ifelse(clusterMat>0,1,0))>1))
 
+
+
 if(length(unique(combinations))>0){
+  unqCombs=unique(combinations)
+  unqCombs[order(nchar(unqCombs),order(unqCombs),decreasing = T)]
   max_nOverlaps=max(str_count(combinations,pattern = "/")+1)
   #counting species that overlap by counting '/'
   hasOverlap=unique(as.character(str_split_fixed(combinations,pattern = "/",n = max_nOverlaps)))
@@ -225,13 +229,12 @@ summaryString=paste("Summary:\n\n",
                     "Named species: ",totSpec,"\n\n",
                     multiAllele, " of ", TotGCF, " (",signif(100*multiAllele/TotGCF,4),"%) genomes have multiple alleles.\n\n",
                     overlapSpecN," of ", totSpec," (",signif(100*overlapSpecN/totSpec,4),"%) species overlap.\n\n",
-                    ifelse(length(unique(combinations))>0,paste("The following species overlap:\n\t",paste(unique(combinations),"\n", collapse = "\t",sep="")),
+                    ifelse(length(unqCombs)>0,paste("The following species overlap:\n\t",paste(unqCombs,"\n", collapse = "\t",sep="")),
                            paste("No species overlap.\n"))
                     ,sep="")
 
 #print to terminal
 cat(summaryString)
-
 #add to log file
 sink(file =  gsub("heatmap.pdf","overlap-summary.txt",outPath))
 cat(summaryString)

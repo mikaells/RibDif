@@ -188,7 +188,7 @@ fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplico
 
 echo -e "Making unique clusters with vsearch.\n\n"
 mkdir $genus/amplicons/V3V4-clusters
-vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id 1 --uc $genus/amplicons/$genus-V3V4.uc --clusters $genus/amplicons/V3V4-clusters/Pseudoalteromonas-V3V4_clus --quiet
+vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id 1  -strand both --uc $genus/amplicons/$genus-V3V4.uc --clusters $genus/amplicons/V3V4-clusters/$genus-V3V4_clus --quiet
 
 #echo -e "Making whole gene summary file for tree viewer import.\n\n"
 #Rscript $scriptDir/Format16STrees.R $genus/full/$genus.tree $genus/full/$genus-meta.csv

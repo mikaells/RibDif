@@ -50,7 +50,8 @@ if(length(which(ucFile$species=="sp."))) {
 #rows are GCFs and cols are clusters
 clusterMat=data.frame(matrix(0,nrow=length(unique(ucFile$GCF)),ncol = 1+length(unique(ucFile$V2))))
 rownames(clusterMat)=unique(ucFile$GCF)
-colnames(clusterMat)=unique(ucFile$V2)
+#colnames(clusterMat)=unique(ucFile$V2)
+colnames(clusterMat)=0:max(unique(ucFile$V2))
 
 #making an empty vector for storing species corresponding to GCFs
 rowAnnotVec=rep("",length(unique(ucFile$GCF)))

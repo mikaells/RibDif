@@ -199,5 +199,8 @@ Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-V3V4.tree $genus/amp
 echo -e "Making amplicon cluster membership heatmaps.\n\n"
 Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-V3V4.uc $genus/amplicons/$genus-V3V4-heatmap.pdf
 
+#clean up logs etc
+rm Rplots.pdf
+rm barrnap.log
 
 echo -e "\nDone.\n\n"

@@ -206,6 +206,7 @@ if(length(unique(combinations))>0){
   #counting species that overlap by counting '/'
   hasOverlap=unique(as.character(str_split_fixed(combinations,pattern = "/",n = max_nOverlaps)))
 } else {
+  unqCombs=c()
   max_nOverlaps=0
   #counting species that overlap by counting '/'
   hasOverlap=unique(as.character(str_split_fixed(combinations,pattern = "/",n = max_nOverlaps)))

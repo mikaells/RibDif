@@ -37,7 +37,7 @@ ucFile=ucFile[order(ucFile$species,ucFile$GCF),]
 
 #putting all unclassified species at the bottom
 if(length(which(ucFile$species=="sp."))) {
-  ucFile=rbind(ucFile[-c(ucFile$species=="sp."),],ucFile[-c(ucFile$species=="sp."),])
+  ucFile=rbind(ucFile[-which(ucFile$species=="sp."),],ucFile[which(ucFile$species=="sp."),])
 }
 
 #####

@@ -213,7 +213,9 @@ if(length(unique(combinations))>0){
 }
 
 #removing 'sp'
-hasOverlap=hasOverlap[-grep("^$|sp\\.",hasOverlap)]
+if(length(grep("^$|sp\\.",hasOverlap))) {
+  hasOverlap=hasOverlap[-grep("^$|sp\\.",hasOverlap)]
+}
 
 #counting overlapping species
 overlapSpecN=length(hasOverlap)
@@ -230,7 +232,7 @@ summaryString=paste("Summary:\n\n",
                     "Genomes: ",TotGCF,"\n",paste("\t","Named: ",nNamedGCF,"\n\tNon-named: ",nNonnamedGCF,"\n\n", sep=""),
                     "Named species: ",totSpec,"\n\n",
                     multiAllele, " of ", TotGCF, " (",signif(100*multiAllele/TotGCF,4),"%) genomes have multiple alleles.\n\n",
-                    overlapSpecN," of ", totSpec," (",signif(100*overlapSpecN/totSpec,4),"%) species overlap.\n\n",
+                    overlapSpecN," of ", totSpec," (",signif(100*overlapSpecN/totSpec,4),"%) species have at least one overlap.\n\n",
                     ifelse(length(unqCombs)>0,paste("The following species overlap:\n\t",paste(unqCombs,"\n", collapse = "\t",sep="")),
                            paste("No species overlap.\n"))
                     ,sep="")

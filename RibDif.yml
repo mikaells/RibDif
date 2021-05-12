@@ -1,4 +1,4 @@
-name: rRNA_counter
+name: RibDif
 channels:
   - bioconda
   - conda-forge
@@ -368,5 +368,5 @@ dependencies:
     - plac==1.2.0
     - sortedcontainers==2.2.2
     - toml==0.10.1
-prefix: /home/milst/miniconda3/envs/rRNA_counter
+prefix: /home/milst/miniconda3/envs/RibDif
 

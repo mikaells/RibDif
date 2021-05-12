@@ -8,7 +8,7 @@
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes].\n\n"
+	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes].\n\n"
 	exit;
 fi
 
@@ -24,7 +24,7 @@ while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nrRNA_counter \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes].\n\n"
+		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes].\n\n"
 		exit 0
 		;;
 	-g | --genus)
@@ -60,7 +60,7 @@ done
 #find and set cpus
 Ncpu=$( nproc )
 
-echo -e "\n***rRNA_counter running on $genus_arg***\n\n"
+echo -e "\n***RibDif running on $genus_arg***\n\n"
 
 #if there is a space in the genus argument, assume a species
 if [[ $genus_arg =~ " " ]]

@@ -1,4 +1,4 @@
-# rRNA_counter
+# RibDif
 Count and compare 16S rRNA genes within a genus or species
 
 Takes an input genus and returns a large set of analysed files, the main being phylogenetic trees of full length 16S rRNA genes and common amplicons thereof.
@@ -10,19 +10,19 @@ This can be useful for determining if species resolution is possible within cert
 
 #Clone from github
 
-git clone https://github.com/mikaells/rRNA_counter/
+git clone https://github.com/mikaells/RibDif/
 
 #Create conda environment from yml file
 
-conda env create -f rRNA_counter/rRNA_counter.yml
+conda env create -f RibDif/RibDif.yml
 
 #Activate conda environment 
 
-conda activate rRNA_counter
+conda activate RibDif
 
 #Set permissions of files to be executable 
 
-chmod 755 rRNA_counter/*
+chmod 755 RibDif/*
 
 #silence the parallel citation message if need be (and do with the message what you wish)
 
@@ -35,11 +35,11 @@ Note: in_silico_PCR.pl is borrowed from https://github.com/egonozer/in_silico_pc
 ## Usage
 #Run analysis by as follows 
 
-path-to-rRNA_counter/rRNA_counter.sh -g $genus
+path-to-RibDif/RibDif.sh -g $genus
 
 #An example run with Ruegeria as target genus:
 
-~/rRNA_counter/rRNA_counter.sh -g Ruegeria
+~/RibDif/RibDif.sh -g Ruegeria
 
 #Can run with species as well, make sure to use quotes
 

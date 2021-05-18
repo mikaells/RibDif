@@ -99,9 +99,6 @@ then
 	exit
 fi
 
-#save command line
-echo "RibDif.sh --genus $genus --clobber $clobber --ANI $ANI --frag $frag --id $id --threads Ncpu" > $genus/run_cmd
-
 
 #Use ncbi-genome-download for downloading genus/species
 echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n";
@@ -121,6 +118,9 @@ then
 	echo -e "\n\tDownload failed, is $genus_arg a correct genus?\n\n"
 	exit
 fi
+
+#save command line
+echo "RibDif.sh --genus $genus --clobber $clobber --ANI $ANI --frag $frag --id $id --threads Ncpu" > $genus/run_cmd
 
 #gunzip all in parallel
 echo -e "Gunzipping all files.\n\n"

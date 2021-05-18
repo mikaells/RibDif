@@ -8,7 +8,7 @@
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff]\n\t[-t|--threads\tthreads].\n\n"
+	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads].\n\n"
 	exit;
 fi
 
@@ -19,7 +19,7 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 clobber=false
 ANI=true
 frag=false
-id=100
+id=1
 Ncpu=$( nproc --all )
 
 
@@ -27,7 +27,7 @@ while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff]\n\t[-t|--threads\tthreads].\n\n"
+		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads].\n\n"
 		exit 0
 		;;
 	-g | --genus)

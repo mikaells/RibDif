@@ -111,3 +111,6 @@ $genus-summary.csv # contains summary statistics for each genome. Columns 5-8 ar
 
   
 The tree files are just newick-files and can be used in any treeviewer or R. The meta.csv file is formatted for CLC, but is just a table and can be used for other treeviewers supporting annotation.
+
+
+![My image](mikaells.github.com/RibDif/img/Phaeobacter-V3V4_clusterdistri.png)

@@ -20,7 +20,7 @@ clobber=false
 ANI=true
 frag=false
 id=100
-Ncpu=$( nproc -all )
+Ncpu=$( nproc --all )
 
 
 while :

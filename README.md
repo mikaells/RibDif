@@ -50,7 +50,7 @@ Running Ruegeria will take a minute or two, while large genera like Bacillus mig
 
 
 
-## Full set off options:
+## Full set of options:
 
  -g|--genus     
  #the genus you want
@@ -62,10 +62,10 @@ Running Ruegeria will take a minute or two, while large genera like Bacillus mig
 #off by default, if you dont care about individual genomes
 
 [-f|--frag]     
-#of by default, full genomes are required for detecting all 16S-genes, use with caution 
+#off by default, full genomes are required for detecting all 16S-genes, use with caution 
 
 [-i|--id]       
-#1 (100% identity) as default, if the final evaluation should be done at amplicons clustered at another identity like .99 (pretty experimental right now
+#1 (100% identity) as default, if the final evaluation should be done at amplicons clustered at another identity, like .99 (pretty experimental right now)
 
 [-t|--threads]  
 #default all, number of threads to use

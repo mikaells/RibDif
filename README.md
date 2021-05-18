@@ -49,6 +49,22 @@ path-to-RibDif/RibDif.sh -g $genus
 Running Ruegeria will take a minute or two, while large genera like Bacillus might take more than an hour as it has 7000+ genomes with 10+ 16S genes.
 
 
+
+# Full set off options:
+
+ -g|--genus     # the genus you want
+ 
+[-c|--clobber]  # Delete previous run
+
+[-a|--ANI]      # off by default, if you dont care about individual genomes
+
+[-f|--frag]     # of by default, full genomes are required for detecting all 16S-genes, use with caution 
+
+[-i|--id]       # 1 (100% identity) as default, if the final evaluation should be done at amplicons clustered at another identity like .99 
+
+[-t|--threads]  # default all, number of threads to use
+
+
 ## Output
 
 The program generates a new directory named after the genus in question. Within that is a summary file and three sub directories.
@@ -58,12 +74,14 @@ The main files of interest for amplicon metataxonomic analysis is the amplicon/ 
 
 amplicons/ #files for amplicons
   
-    $genus-$region.16S # all 16S genes  
-    $genus-$region.aln # alligned from 16S genes (alligned by mafft)  
+    $genus-$region.amplicons # all 16S amplicons genes  
+    $genus-$region.aln # alligned from 16S amplicons (alligned by mafft)  
     $genus-$region.tree # tree from allignment  
-    $genus-$region-meta.csv # metadata for each sequence
+    $genus-$region-meta.csv # overview of each amplicon from each genome and the cluster they belong to
+    $genus-$region.uc # clustering file from vsearch
     $genus-$region-heatmap.pdf # heatmap of 1) clusters found in each genome and 2) genomes that would overlap with given primers
     $region-clusters/ #amplicons clustered into unique clusters by vsearch, in fasta format
+    $genus-$region-overlap-summary.txt # analysis summary
     
 full/ # files for full length 16S analysis
   

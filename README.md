@@ -112,5 +112,12 @@ $genus-summary.csv # contains summary statistics for each genome. Columns 5-8 ar
   
 The tree files are just newick-files and can be used in any treeviewer or R. The meta.csv file is formatted for CLC, but is just a table and can be used for other treeviewers supporting annotation.
 
+# Example output
 
-![My image](mikaells.github.com/RibDif/img/Phaeobacter-V3V4_clusterdistri.png)
+V3V4 amplicons generated from the Phaeobacter genus results in 4 unique alleles, and these are identical in P. piscinae and P. gallaeciencis (apart from 1 genome of P. gallaeciencis). P. porticola has a unique V3V4 amplicon. 
+
+![My image](https://github.com/mikaells/RibDif/blob/master/img/Phaeobacter-V3V4_clusterdistri.png)
+
+A more concise view of which genomes overlap. Evidently, P. piscinae and P. gallaeciencis cannot be distinguised by V3V4 amplicon sequencing.
+![My image](https://github.com/mikaells/RibDif/blob/master/img/Phaeobacter-V3V4_confusionmat.png)
+

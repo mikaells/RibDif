@@ -120,7 +120,7 @@ then
 fi
 
 #save command line
-echo "RibDif.sh --genus $genus --clobber $clobber --ANI $ANI --frag $frag --id $id --threads Ncpu" > $genus/run_cmd
+echo "RibDif.sh --genus $genus --clobber $clobber --ANI $ANI --frag $frag --id $id --threads $Ncpu" > $genus/run_cmd
 
 #gunzip all in parallel
 echo -e "Gunzipping all files.\n\n"

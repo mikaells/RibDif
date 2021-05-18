@@ -99,6 +99,9 @@ then
 	exit
 fi
 
+#save command line
+cat "RibDif.sh --genus $genus --clobber $clobber --ANI $ANI --frag $frag --id $id --threads Ncpu" > $genus/run_cmd
+
 
 #Use ncbi-genome-download for downloading genus/species
 echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n";
@@ -192,22 +195,25 @@ seqkit replace --quiet -p "(.+)" -r '{kv}' -k $genus/amplicons/$genus-V1V9.summa
 rm $genus/amplicons/$genus-V3V4.temp.amplicons
 rm $genus/amplicons/$genus-V1V9.temp.amplicons
 
+rm $genus/amplicons/$genus-V1V9.summary
+rm $genus/amplicons/$genus-V3V4.summary
+
 echo -e "Alligning all amplicons with mafft and building tree with fasttree.\n\n"
 mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-V3V4.amplicons > $genus/amplicons/$genus-V3V4.aln
 fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplicons/$genus-V3V4.tree
 
 echo -e "Making unique clusters with vsearch.\n\n"
-mkdir $genus/amplicons/V3V4-clusters_$id
-vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id 1  -strand both --uc $genus/amplicons/$genus-V3V4_$id.uc --clusters $genus/amplicons/V3V4-clusters_$id/$genus-V3V4_clus --quiet
+mkdir $genus/amplicons/V3V4-clusters
+vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id 1  -strand both --uc $genus/amplicons/$genus-V3V4.uc --clusters $genus/amplicons/V3V4-clusters/$genus-V3V4_clus --quiet
 
 #echo -e "Making whole gene summary file for tree viewer import.\n\n"
 #Rscript $scriptDir/Format16STrees.R $genus/full/$genus.tree $genus/full/$genus-meta.csv
 
 echo -e "Making amplicon summary file for tree viewer import.\n\n"
-Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv $genus/amplicons/$genus-V3V4_$id.uc
+Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv $genus/amplicons/$genus-V3V4.uc
 
 echo -e "Making amplicon cluster membership heatmaps.\n\n"
-Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-V3V4_$id.uc $genus/amplicons/$genus-V3V4-heatmap_$id.pdf
+Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-V3V4.uc $genus/amplicons/$genus-V3V4-heatmap.pdf
 
 #clean up logs etc
 rm Rplots.pdf

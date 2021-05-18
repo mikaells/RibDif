@@ -50,7 +50,7 @@ Running Ruegeria will take a minute or two, while large genera like Bacillus mig
 
 
 
-# Full set off options:
+## Full set off options:
 
  -g|--genus     # the genus you want
  

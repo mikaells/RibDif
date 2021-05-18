@@ -8,7 +8,7 @@
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes].\n\n"
+	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff]\n\t[-t|--threads\tthreads].\n\n"
 	exit;
 fi
 
@@ -19,12 +19,15 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 clobber=false
 ANI=true
 frag=false
+id=100
+Ncpu=$( nproc -all )
+
 
 while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes].\n\n"
+		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff]\n\t[-t|--threads\tthreads].\n\n"
 		exit 0
 		;;
 	-g | --genus)
@@ -43,6 +46,14 @@ do
 		frag=true
 		shift
 		;;
+	-i | --id)
+		id="$2"
+		shift
+		;;
+	-t | --threads)
+		Ncpu="$2"
+		shift
+		;;
 	--)
 		shift
 		break
@@ -57,8 +68,7 @@ do
  esac
 done
 
-#find and set cpus
-Ncpu=$( nproc )
+
 
 echo -e "\n***RibDif running on $genus_arg***\n\n"
 
@@ -187,17 +197,17 @@ mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-V3
 fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplicons/$genus-V3V4.tree
 
 echo -e "Making unique clusters with vsearch.\n\n"
-mkdir $genus/amplicons/V3V4-clusters
-vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id 1  -strand both --uc $genus/amplicons/$genus-V3V4.uc --clusters $genus/amplicons/V3V4-clusters/$genus-V3V4_clus --quiet
+mkdir $genus/amplicons/V3V4-clusters_$id
+vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id 1  -strand both --uc $genus/amplicons/$genus-V3V4_$id.uc --clusters $genus/amplicons/V3V4-clusters_$id/$genus-V3V4_clus --quiet
 
 #echo -e "Making whole gene summary file for tree viewer import.\n\n"
 #Rscript $scriptDir/Format16STrees.R $genus/full/$genus.tree $genus/full/$genus-meta.csv
 
 echo -e "Making amplicon summary file for tree viewer import.\n\n"
-Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv $genus/amplicons/$genus-V3V4.uc
+Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-V3V4.tree $genus/amplicons/$genus-V3V4-meta.csv $genus/amplicons/$genus-V3V4_$id.uc
 
 echo -e "Making amplicon cluster membership heatmaps.\n\n"
-Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-V3V4.uc $genus/amplicons/$genus-V3V4-heatmap.pdf
+Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-V3V4_$id.uc $genus/amplicons/$genus-V3V4-heatmap_$id.pdf
 
 #clean up logs etc
 rm Rplots.pdf

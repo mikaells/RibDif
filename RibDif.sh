@@ -159,7 +159,7 @@ if [[ $ANI = false  ]]
 then
 	echo -e "Skipping detailed intra-genomic analysis and ANI.\n\n"
 else
-	echo -e "Calculating intra-genomic mismatches and ANI for each genome .\n\n"
+	echo -e "Calculating intra-genomic mismatches and ANI for each genome.\n\n"
 	ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel -j $Ncpu 'average_nucleotide_identity.py -i {} -o {}/../ani/'
 fi
 
@@ -204,7 +204,7 @@ fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-V3V4.aln > $genus/amplico
 
 echo -e "Making unique clusters with vsearch.\n\n"
 mkdir $genus/amplicons/V3V4-clusters
-vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id 1  -strand both --uc $genus/amplicons/$genus-V3V4.uc --clusters $genus/amplicons/V3V4-clusters/$genus-V3V4_clus --quiet
+vsearch -cluster_fast $genus/amplicons/$genus-V3V4.amplicons --id $id  -strand both --uc $genus/amplicons/$genus-V3V4.uc --clusters $genus/amplicons/V3V4-clusters/$genus-V3V4_clus --quiet
 
 #echo -e "Making whole gene summary file for tree viewer import.\n\n"
 #Rscript $scriptDir/Format16STrees.R $genus/full/$genus.tree $genus/full/$genus-meta.csv

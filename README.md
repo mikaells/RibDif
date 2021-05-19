@@ -46,7 +46,7 @@ path-to-RibDif/RibDif.sh -g $genus
 ~/RibDif/RibDif.sh -g "Mycoplasma bovis"
 
 
-Running Ruegeria will take a minute or two, while large genera like Bacillus might take more than an hour as it has 7000+ genomes with 10+ 16S genes.
+Running Ruegeria will less than a minute, while large genera like Bacillus might take more than an hour as it has 7000+ genomes with 10+ 16S genes.
 
 
 

@@ -48,6 +48,8 @@ path-to-RibDif/RibDif.sh -g $genus
 
 Running Ruegeria will less than a minute, while large genera like Bacillus might take more than an hour as it has 7000+ genomes with 10+ 16S genes.
 
+In some genera, unspecific R-errors are thrown. It is caused by some genomes having no rRNA genes, but causes no problems downstream. How a completed genome can have no 
+rRNA genes is of course cause of some concern. Occasionally, an error occors when people have used weird characters in their genome names. I have tried parsing all cases, but people are suprisingly creative when it comes to naming schemes.
 
 
 ## Full set of options:

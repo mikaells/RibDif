@@ -1,9 +1,9 @@
 # RibDif
-Evaluate the difference in 16S ribosomal RNA genes within a genus or species
+RibDif evaluates the differences in 16S ribosomal RNA genes within a genus or species
 
-Takes an input genus and returns a large set of analysed files, the main being phylogenetic trees of full length 16S rRNA genes and common amplicons thereof.
+Takes an input genus and returns a large set of analysed files, the main being heatmaps of V3V4 amplicons of 16S rRNA genes.
 
-This can be useful for determining if species resolution is possible within certain genera using common metataxonomic approaches
+This can be useful for determining if species resolution is possible within certain genera using common metataxonomic approaches. Often they are not.
 
 
 ## Installation
@@ -123,10 +123,37 @@ The tree files are just newick-files and can be used in any treeviewer or R. The
 
 # Example output
 
-V3V4 amplicons generated from the Phaeobacter genus results in 4 unique alleles, and these are identical in P. piscinae and P. gallaeciencis (apart from 1 genome of P. gallaeciencis). P. porticola has a unique V3V4 amplicon. 
+V3V4 amplicons generated from the Pseudoalteromonas genus results in 51 unique alleles, and these are identical multiple species such as the allele found in agarivorans/atlantica/carrageenovora/espejiana/issachenkonii/tetraodonis, which hence cannot be seperated using V3V4 sequencing. Moreover, several genomes have multiple distinct alleles, which will artificially overinflate diversity estimates. Additionally, some genomes have alleles shared with different species, such as a genome of P. arctica which has alleles seperately shared with P. translucida and P. nigrifaciens. V3V4 amplicons from this genome would erronously suggest that three different species are present.
 
-![My image](https://github.com/mikaells/RibDif/blob/master/img/Phaeobacter-V3V4_clusterdistri.png)
+![My image](https://github.com/mikaells/RibDif/blob/master/img/Pseudoalteromonas-V3V4_clusterdistri.png)
 
-A more concise view of which genomes overlap. Evidently, P. piscinae and P. gallaeciencis cannot be distinguised by V3V4 amplicon sequencing.
-![My image](https://github.com/mikaells/RibDif/blob/master/img/Phaeobacter-V3V4_confusionmat.png)
+A more concise view of which genomes overlap. Evidently, multiple species cannot be distinguished from V3V4 sequencing.
+![My image](https://github.com/mikaells/RibDif/blob/master/img/Pseudoalteromonas-V3V4_confusionmat.png)
+
+
+RibDif gives the following overlap summary which may be easier to parse for large genera:
+
+    Summary:
+    
+    Genomes: 56
+    	Named: 35
+    	Non-named: 21
+
+    Named species: 24
+    
+    29 of 56 (51.79%) genomes have multiple alleles.
+
+    19 of 24 (79.17%) species have at least one overlap.
+
+    The following species overlap:
+	agarivorans/atlantica/carrageenovora/espejiana/issachenkonii/sp./tetraodonis
+	nigrifaciens/sp./translucida
+	piscicida/rubra/sp./viridis
+	arabiensis/shioyasakiensis
+	arctica/sp./translucida
+	arctica/translucida
+	piratica/spongiae
+	donghaensis/sp.
+	ruthenica/sp.
+	marina/sp.
 

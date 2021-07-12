@@ -222,7 +222,7 @@ do
 
 	echo -e "Making unique clusters with vsearch.\n\n"
 	mkdir $genus/amplicons/$name-clusters
-	vsearch -cluster_fast $genus/amplicons/$genus-$name.amplicons --id $id  -strand both --uc $genus/amplicons/$genus-$name.uc --clusters $genus/amplicons/$name.uc -clusters/$genus-$name-clus --quiet
+	vsearch -cluster_fast $genus/amplicons/$genus-$name.amplicons --id $id  -strand both --uc $genus/amplicons/$genus-$name.uc --clusters $genus/amplicons/$name-clusters/$genus-$name-clus --quiet
 
 	echo -e "Making amplicon summary file for tree viewer import.\n\n"
 	Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-$name.tree $genus/amplicons/$genus-$name-meta.csv $genus/amplicons/$genus-$name.uc

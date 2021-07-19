@@ -168,7 +168,7 @@ else
 	ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel -j $Ncpu 'average_nucleotide_identity.py -i {} -o {}/../ani/'
 fi
 
-echo -e "Alligning 16S genes within genomes with muscle and builing trees with fastree.\n\n"
+echo -e "Alligning 16S genes within genomes with muscle and building trees with fastree.\n\n"
 find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu 'muscle -in {} -out {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
 
 #Summarizing data

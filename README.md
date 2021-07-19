@@ -60,7 +60,7 @@ rRNA genes is of course cause of some concern. Occasionally, an error occors whe
 [-c|--clobber]  
 #Delete previous run
 
-[-p|--primers]
+[-p|--primers]   
 #Path to custom primer-file, must be a tab seperated file with name, forward and reverse primers. See the file 'v3v4.primers' 
 
 [-a|--ANI]      

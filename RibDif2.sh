@@ -190,12 +190,14 @@ fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 echo -e "Making amplicons with in_silico_pcr.\n\n"
 if [[ primers = "$scriptDir/v3v4.primers" ]]
 then
-	echo -e "Using default primers\n\n"
+	echo -e "Using default primers.\n\n"
 else
-	echo -e "Using user-defined primers\n\n"
+	echo -e "Using user-defined primers.\n\n"
 fi
 
 mkdir $genus/amplicons/
+
+echo -e "-------------------------------------\n\n"
 
 while read line;
 do
@@ -204,7 +206,7 @@ do
 	forw=$(echo $line | cut -f2 -d" ")
 	rev=$(echo $line  | cut -f3 -d" ")
 
-	echo -e "Working on $name\n\n";
+	echo -e "Working on $name-primers:\n\n";
 	$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a $forw    -b $rev -r -m -i > $genus/amplicons/$genus-$name.summary 2> $genus/amplicons/$genus-$name.temp.amplicons
 
 	#renaming headers
@@ -230,7 +232,7 @@ do
 	echo -e "\tMaking amplicon cluster membership heatmaps.\n\n"
 	Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-$name.uc $genus/amplicons/$genus-$name-heatmap.pdf
 
-	echo -e "\n\n-------------------------------------\n\n"
+	echo -e "\n-------------------------------------\n"
 done < $primers
 
 #clean up logs etc

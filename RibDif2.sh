@@ -77,6 +77,15 @@ done
 
 echo -e "\n***RibDif running on $genus_arg***\n\n"
 
+if [ -s "$primers" ]
+then
+	echo -e ""
+else
+	echo -e "Error: $primers does not exist or is empty"
+	exit
+fi
+
+
 #if there is a space in the genus argument, assume a species
 if [[ $genus_arg =~ " " ]]
 then
@@ -168,7 +177,7 @@ else
 	ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel -j $Ncpu 'average_nucleotide_identity.py -i {} -o {}/../ani/'
 fi
 
-echo -e "Alligning 16S genes within genomes with muscle and building trees with fastree.\n\n"
+echo -e "Alligning full-length 16S genes within genomes with muscle and building trees with fastree.\n\n"
 find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu 'muscle -in {} -out {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
 
 #Summarizing data
@@ -188,9 +197,9 @@ fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
 if [[ $primers = "$scriptDir/v3v4.primers" ]]
 then
-	echo -e "Using default primers.\n\n"
+	echo -e "Running amplicon analysis with default primers.\n\n"
 else
-	echo -e "Using user-defined primers.\n\n"
+	echo -e "Running amplicon analysis with user-defined primers.\n\n"
 fi
 
 mkdir $genus/amplicons/

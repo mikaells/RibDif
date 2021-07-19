@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ####
-#A program to analyse the 16s variation in each genome of a genus
-#Mikael Lenz Strube
-#10-02-2021
+#A program to analyse 16S rRNA amplicons of a bacterial genus
+#Mikael Lenz Strube, milst@dtu.dk
+#19-07-2021
 ####
 
 #Input sanitation

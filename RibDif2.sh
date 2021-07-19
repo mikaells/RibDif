@@ -8,7 +8,7 @@
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tDelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
+	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
 	exit;
 fi
 
@@ -27,7 +27,7 @@ while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
+		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
 		exit 0
 		;;
 	-g | --genus)
@@ -190,9 +190,9 @@ fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 echo -e "Making amplicons with in_silico_pcr.\n\n"
 if [[ primers = "$scriptDir/v3v4.primers" ]]
 then
-	echo -e "\tUsing default primers\n\n"
+	echo -e "Using default primers\n\n"
 else
-	echo -e "\tUsing user-defined primers\n\n"
+	echo -e "Using user-defined primers\n\n"
 fi
 
 mkdir $genus/amplicons/
@@ -204,7 +204,7 @@ do
 	forw=$(echo $line | cut -f2 -d" ")
 	rev=$(echo $line  | cut -f3 -d" ")
 
-	echo -e "Working on \t$name\n\n";
+	echo -e "Working on $name\n\n";
 	$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a $forw    -b $rev -r -m -i > $genus/amplicons/$genus-$name.summary 2> $genus/amplicons/$genus-$name.temp.amplicons
 
 	#renaming headers
@@ -216,20 +216,21 @@ do
 	rm $genus/amplicons/$genus-$name.summary
 
 
-	echo -e "Alligning all amplicons with mafft and building tree with fasttree.\n\n"
+	echo -e "\tAlligning all amplicons with mafft and building tree with fasttree.\n\n"
 	mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-$name.amplicons > $genus/amplicons/$genus-$name.aln
 	fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-$name.aln > $genus/amplicons/$genus-$name.tree
 
-	echo -e "Making unique clusters with vsearch.\n\n"
+	echo -e "\tMaking unique clusters with vsearch.\n\n"
 	mkdir $genus/amplicons/$name-clusters
 	vsearch -cluster_fast $genus/amplicons/$genus-$name.amplicons --id $id  -strand both --uc $genus/amplicons/$genus-$name.uc --clusters $genus/amplicons/$name-clusters/$genus-$name-clus --quiet
 
-	echo -e "Making amplicon summary file for tree viewer import.\n\n"
+	echo -e "\tMaking amplicon summary file for tree viewer import.\n\n"
 	Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-$name.tree $genus/amplicons/$genus-$name-meta.csv $genus/amplicons/$genus-$name.uc
 
-	echo -e "Making amplicon cluster membership heatmaps.\n\n"
+	echo -e "\tMaking amplicon cluster membership heatmaps.\n\n"
 	Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-$name.uc $genus/amplicons/$genus-$name-heatmap.pdf
 
+	echo -e "\n\n-------------------------------------\n\n"
 done < $primers
 
 #clean up logs etc

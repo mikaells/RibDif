@@ -188,7 +188,7 @@ fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
 
 echo -e "Making amplicons with in_silico_pcr.\n\n"
-if [[ primers = "$scriptDir/v3v4.primers" ]]
+if [[ $primers = "$scriptDir/v3v4.primers" ]]
 then
 	echo -e "Using default primers.\n\n"
 else
@@ -197,7 +197,7 @@ fi
 
 mkdir $genus/amplicons/
 
-echo -e "-------------------------------------\n\n"
+echo -e "-------------------------------------\n"
 
 while read line;
 do

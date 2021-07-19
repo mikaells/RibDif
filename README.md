@@ -60,8 +60,11 @@ rRNA genes is of course cause of some concern. Occasionally, an error occors whe
 [-c|--clobber]  
 #Delete previous run
 
+[-p|--primers]
+#Path to custom primer-file, must be a tab seperated file with name, forward and reverse primers. See the file 'v3v4.primers' 
+
 [-a|--ANI]      
-#off by default, if you dont care about individual genomes
+#ANI is off by default, turn on if you care about individual genomes
 
 [-f|--frag]     
 #off by default, full genomes are required for detecting all 16S-genes, use with caution 
@@ -76,9 +79,9 @@ like .99 (pretty experimental right now). Does not cluster at the genome level, 
 
 ## Output
 
-The program generates a new directory named after the genus in question. Within that is a summary file and three sub directories.
+The program generates a new directory named after the genus in question. Within that is a summary file and three sub-directories.
 
-The main files of interest for amplicon metataxonomic analysis is the amplicon/ folder. The heatmap pdf is the most important one, as it shows which species overlap, which is also summarized in the 'XX-overlap-summary.txt' file.
+The main files of interest for amplicon metataxonomic analysis is the amplicon/ folder, in which you will find analysis for all all primers. The heatmap pdfs is the most important ones, as they show which species overlap, which is also summarized in the 'XX-overlap-summary.txt' files.
 
 
 amplicons/ #files for amplicons

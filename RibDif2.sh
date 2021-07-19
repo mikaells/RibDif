@@ -72,8 +72,8 @@ do
  esac
 done
 
-cat $primers
-echo "g: $genus_arg c: $clobber a: $ANI f: $frag i: $id t: $Ncpu"
+#cat $primers
+#echo "g: $genus_arg c: $clobber a: $ANI f: $frag i: $id t: $Ncpu"
 
 echo -e "\n***RibDif running on $genus_arg***\n\n"
 

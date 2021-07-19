@@ -8,7 +8,7 @@
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
+	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tenable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
 	exit;
 fi
 
@@ -17,7 +17,7 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 #Working out command line arguments
 clobber=false
-ANI=true
+ANI=false
 frag=false
 id=1
 Ncpu=$( nproc --all )
@@ -27,7 +27,7 @@ while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tdisable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
+		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tenable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
 		exit 0
 		;;
 	-g | --genus)
@@ -39,7 +39,7 @@ do
 		shift
 		;;
 	-a | --ANI)
-		ANI=false
+		ANI=true
 		shift
 		;;
 	-f | --frag)
@@ -186,8 +186,6 @@ echo -e "Alligning all 16S rRNA genes with mafft and building tree with fasttree
 mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/full/$genus.16S > $genus/full/$genus.aln
 fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
-
-echo -e "Making amplicons with in_silico_pcr.\n\n"
 if [[ $primers = "$scriptDir/v3v4.primers" ]]
 then
 	echo -e "Using default primers.\n\n"
@@ -207,16 +205,16 @@ do
 	rev=$(echo $line  | cut -f3 -d" ")
 
 	echo -e "Working on $name-primers:\n\n";
+	
+	echo -e "Making amplicons with in_silico_pcr.\n\n"
 	$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a $forw    -b $rev -r -m -i > $genus/amplicons/$genus-$name.summary 2> $genus/amplicons/$genus-$name.temp.amplicons
 
 	#renaming headers
 	seqkit replace --quiet -p "(.+)" -r '{kv}' -k $genus/amplicons/$genus-$name.summary $genus/amplicons/$genus-$name.temp.amplicons > $genus/amplicons/$genus-$name.amplicons
 
-
 	#deleting old amplicon files
 	rm $genus/amplicons/$genus-$name.temp.amplicons
 	rm $genus/amplicons/$genus-$name.summary
-
 
 	echo -e "\tAlligning all amplicons with mafft and building tree with fasttree.\n\n"
 	mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-$name.amplicons > $genus/amplicons/$genus-$name.aln

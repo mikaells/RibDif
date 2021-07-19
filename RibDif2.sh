@@ -206,7 +206,7 @@ do
 
 	echo -e "Working on $name-primers:\n\n";
 	
-	echo -e "Making amplicons with in_silico_pcr.\n\n"
+	echo -e "\tMaking amplicons with in_silico_pcr.\n\n"
 	$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a $forw    -b $rev -r -m -i > $genus/amplicons/$genus-$name.summary 2> $genus/amplicons/$genus-$name.temp.amplicons
 
 	#renaming headers

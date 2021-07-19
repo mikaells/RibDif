@@ -81,7 +81,7 @@ if [ -s "$primers" ]
 then
 	echo -e ""
 else
-	echo -e "Error: $primers does not exist or is empty"
+	echo -e "Error: $primers does not exist or is empty.\n"
 	exit
 fi
 

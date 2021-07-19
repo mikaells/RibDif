@@ -75,7 +75,7 @@ done
 #cat $primers
 #echo "g: $genus_arg c: $clobber a: $ANI f: $frag i: $id t: $Ncpu"
 
-echo -e "\n***RibDif running on $genus_arg***\n\n"
+echo -e "\n***RibDif running on $genus_arg***\n"
 
 if [ -s "$primers" ]
 then

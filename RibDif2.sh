@@ -162,7 +162,7 @@ done
 #calculating ANI for each genome
 if [[ $ANI = false  ]]
 then
-	echo -e "Skipping detailed intra-genomic analysis and ANI.\n\n"
+	echo -e "Skipping detailed intra-genomic analysis and ANI (if needed, use -a/--ANI).\n\n"
 else
 	echo -e "Calculating intra-genomic mismatches and ANI for each genome.\n\n"
 	ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel -j $Ncpu 'average_nucleotide_identity.py -i {} -o {}/../ani/'

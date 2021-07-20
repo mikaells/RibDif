@@ -21,7 +21,7 @@ ANI=false
 frag=false
 id=1
 Ncpu=$( nproc --all )
-primers="$scriptDir/v3v4.primers"
+primers="$scriptDir/default.primers"
 
 while :
 do
@@ -195,7 +195,7 @@ echo -e "Alligning all 16S rRNA genes with mafft and building tree with fasttree
 mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/full/$genus.16S > $genus/full/$genus.aln
 fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
-if [[ $primers = "$scriptDir/v3v4.primers" ]]
+if [[ $primers = "$scriptDir/default.primers" ]]
 then
 	echo -e "Running amplicon analysis with default primers.\n\n"
 else

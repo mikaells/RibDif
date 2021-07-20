@@ -225,11 +225,11 @@ do
 	rm $genus/amplicons/$genus-$name.temp.amplicons
 	rm $genus/amplicons/$genus-$name.summary
 
-	echo -e "\tAlligning all amplicons with mafft and building tree with fasttree.\n\n"
+	echo -e "\tAlligning all amplicons with mafft and building tree with fasttree.\n"
 	mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-$name.amplicons > $genus/amplicons/$genus-$name.aln
 	fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-$name.aln > $genus/amplicons/$genus-$name.tree
 
-	echo -e "\tMaking unique clusters with vsearch.\n\n"
+	echo -e "\n\tMaking unique clusters with vsearch.\n\n"
 	mkdir $genus/amplicons/$name-clusters
 	vsearch -cluster_fast $genus/amplicons/$genus-$name.amplicons --id $id  -strand both --uc $genus/amplicons/$genus-$name.uc --clusters $genus/amplicons/$name-clusters/$genus-$name-clus --quiet
 

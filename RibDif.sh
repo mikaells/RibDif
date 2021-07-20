@@ -267,9 +267,9 @@ echo -e "\nDone.\n\n"
 
 
 
-STARTUP=$[ ${START} - ${DL_start} ]
+STARTUP=$[ ${DL_start} - ${START} ]
 DL=$[ ${DL_end} - ${DL_start} ]
-FORMAT1=$[ ${FORMAT_1_END} - ${DL_END} ]
+FORMAT1=$[ ${FORMAT_1_END} - ${DL_start} ]
 BARRNAP=$[ ${BARRNAP_END} - ${FORMAT_1_END} ]
 FORMAT2=$[ ${FORMAT_2_END} - ${BARRNAP_END} ]
 WITHIN=$[ ${WITHIN_AL_END} - ${FORMAT_2_END} ]

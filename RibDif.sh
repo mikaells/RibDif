@@ -177,11 +177,11 @@ else
 	ls -d $genus/refseq/bacteria/*/indiv_16S_dir/ | parallel -j $Ncpu 'average_nucleotide_identity.py -i {} -o {}/../ani/'
 fi
 
-echo -e "Alligning full-length 16S genes within genomes with muscle and building trees with fastree.\n\n"
+echo -e "Alligning full-length 16S genes within genomes with muscle and building trees with fastree.\n"
 find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu 'muscle -in {} -out {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
 
 #Summarizing data
-echo -e "Summarizing data into $genus/$genus-summary.csv.\n\n"
+echo -e "\nSummarizing data into $genus/$genus-summary.csv.\n\n"
 echo -e "GCF\tGenus\tSpecies\t#16S\tMean\tSD\tMin\tMax\tTotalDiv" > $genus/$genus-summary.tsv
 ls -d $genus/refseq/bacteria/* | parallel -j $Ncpu Rscript $scriptDir/run16sSummary.R {}/ani/ANIm_similarity_errors.tab {}/*16sAln {}/16S_div.pdf {}/*fna {}/*16sTree >> $genus/$genus-summary.tsv
 
@@ -191,15 +191,15 @@ wait;
 mkdir $genus/full
 find $genus/refseq/bacteria/ -name "*16S" -exec cat {}  \; > $genus/full/$genus.16S
 
-echo -e "Alligning all 16S rRNA genes with mafft and building tree with fasttree.\n\n"
+echo -e "Alligning all 16S rRNA genes with mafft and building tree with fasttree.\n"
 mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/full/$genus.16S > $genus/full/$genus.aln
 fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
 if [[ $primers = "$scriptDir/default.primers" ]]
 then
-	echo -e "Running amplicon analysis with default primers.\n\n"
+	echo -e "\nRunning amplicon analysis with default primers.\n\n"
 else
-	echo -e "Running amplicon analysis with user-defined primers.\n\n"
+	echo -e "\nRunning amplicon analysis with user-defined primers.\n\n"
 fi
 
 mkdir $genus/amplicons/

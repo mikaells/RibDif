@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #timing
-START="$(date +%s)"
+T1_START="$(date +%s)"
 
 ####
 #A program to analyse 16S rRNA amplicons of a bacterial genus
@@ -116,7 +116,7 @@ then
 	exit
 fi
 
-DL_start="$(date +%s)"
+T2_DL_start="$(date +%s)"
 
 #Use ncbi-genome-download for downloading genus/species
 echo -e  "Downloading all strains of $genus into $genus/refseq/bacteria/ with ncbi-genome-download.\n";
@@ -137,7 +137,7 @@ then
 	exit
 fi
 
-DL_end="$(date +%s)"
+T3_DL_end="$(date +%s)"
 
 #save command line
 echo "RibDif.sh --genus $genus --primers $primers --clobber $clobber --ANI $ANI --frag $frag --id $id --threads $Ncpu" > $genus/run_cmd
@@ -152,13 +152,13 @@ echo -e "Renaming fastas and adding GCF (for genomes with multiple chromosomes).
 find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu 'sed -i "s/[:,/()=#\0x27]//g; s/[: ]/_/g" {} '
 find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu ' GCF=$(echo $(basename $(dirname {})));  sed -E -i "s/^>(.*)/>$GCF"_"\1/g" {} '
 
-FORMAT_1_END="$(date +%s)"
+T4_FORMAT_1_END="$(date +%s)"
 
 #run barrnap
 echo -e "Finding all rRNA genes longer than 90% of expected length with barrnap.\n\n"
 find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu ' barrnap --kingdom "bac" --quiet --threads 1 --reject 0.90 -o "{.}.rRNA" {}'  > barrnap.log 2>&1
 
-BARRNAP_END="$(date +%s)"
+T5_BARRNAP_END="$(date +%s)"
 
 #fish out 16S
 echo -e "Fishing out 16S genes.\n\n"
@@ -178,7 +178,7 @@ for folder in $genus/refseq/bacteria/*; do
 	cd $original_PWD
 done
 
-FORMAT_2_END="$(date +%s)"
+T6_FORMAT_2_END="$(date +%s)"
 
 #calculating ANI for each genome
 if [[ $ANI = false  ]]
@@ -192,14 +192,14 @@ fi
 echo -e "Alligning full-length 16S genes within genomes with muscle and building trees with fastree.\n"
 find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu 'muscle -in {} -out {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
 
-WITHIN_AL_END="$(date +%s)"
+T7_WITHIN_AL_END="$(date +%s)"
 
 #Summarizing data
 echo -e "\nSummarizing data into $genus/$genus-summary.csv.\n\n"
 echo -e "GCF\tGenus\tSpecies\t#16S\tMean\tSD\tMin\tMax\tTotalDiv" > $genus/$genus-summary.tsv
 ls -d $genus/refseq/bacteria/* | parallel -j $Ncpu Rscript $scriptDir/run16sSummary.R {}/ani/ANIm_similarity_errors.tab {}/*16sAln {}/16S_div.pdf {}/*fna {}/*16sTree >> $genus/$genus-summary.tsv
 
-SUM_1_END="$(date +%s)"
+T8_SUM_1_END="$(date +%s)"
 
 wait;
 
@@ -210,7 +210,27 @@ echo -e "Alligning all 16S rRNA genes with mafft and building tree with fasttree
 mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/full/$genus.16S > $genus/full/$genus.aln
 fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
 
-FULL_ALN_END="$(date +%s)"
+T9_FULL_ALN_END="$(date +%s)"
+
+###
+STARTUP=$[ ${T2_DL_start} - ${T1_START} ]
+DL=$[ ${T3_DL_end} - ${T2_DL_start} ]
+FORMAT1=$[ ${T4_FORMAT_1_END} - ${T3_DL_start} ]
+BARRNAP=$[ ${T5_BARRNAP_END} - ${T4_FORMAT_1_END} ]
+FORMAT2=$[ ${T6_FORMAT_2_END} - ${T5_BARRNAP_END} ]
+WITHIN=$[ ${T7_WITHIN_AL_END} - ${T6_FORMAT_2_END} ]
+SUM1=$[ ${T8_SUM_1_END} - ${T7_WITHIN_AL_END} ]
+FULL=$[ ${T9_FULL_ALN_END} - ${T8_SUM_1_END} ]
+
+#echo "$START"
+echo "DL $DL"
+echo "FORMAT1 $FORMAT1"
+echo "BARNAPP $BARRNAP"
+echo "FORMAT2 $FORMAT2"
+echo "WITHIN $WITHIN"
+echo "SUM1 $SUM1"
+echo "FULL $FULL"
+
 
 if [[ $primers = "$scriptDir/default.primers" ]]
 then
@@ -223,8 +243,10 @@ mkdir $genus/amplicons/
 
 echo -e "-------------------------------------\n"
 
+T10_BEFORE_LOOP="$(date +%s)"
 while read line;
 do
+	T11_START_LOOP="$(date +%s)"
 	#echo  $line
 	name=$(echo $line | cut -f1 -d" ")
 	forw=$(echo $line | cut -f2 -d" ")
@@ -234,7 +256,9 @@ do
 	
 	echo -e "\tMaking amplicons with in_silico_pcr.\n\n"
 	$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a $forw    -b $rev -r -m -i > $genus/amplicons/$genus-$name.summary 2> $genus/amplicons/$genus-$name.temp.amplicons
-
+	
+	T12_PCR_END="$(date +%s)"
+	
 	#renaming headers
 	seqkit replace --quiet -p "(.+)" -r '{kv}' -k $genus/amplicons/$genus-$name.summary $genus/amplicons/$genus-$name.temp.amplicons > $genus/amplicons/$genus-$name.amplicons
 
@@ -246,17 +270,40 @@ do
 	mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-$name.amplicons > $genus/amplicons/$genus-$name.aln
 	fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-$name.aln > $genus/amplicons/$genus-$name.tree
 
+	T13_ALN_END="$(date +%s)"
+	
 	echo -e "\n\tMaking unique clusters with vsearch.\n\n"
 	mkdir $genus/amplicons/$name-clusters
 	vsearch -cluster_fast $genus/amplicons/$genus-$name.amplicons --id $id  -strand both --uc $genus/amplicons/$genus-$name.uc --clusters $genus/amplicons/$name-clusters/$genus-$name-clus --quiet
-
+	
+	T14_VSEARCH_END="$(date +%s)"
+	
 	echo -e "\tMaking amplicon summary file for tree viewer import.\n\n"
 	Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-$name.tree $genus/amplicons/$genus-$name-meta.csv $genus/amplicons/$genus-$name.uc
 
+	T15_RFORMAT_END"$(date +%s)"
+
 	echo -e "\tMaking amplicon cluster membership heatmaps.\n\n"
 	Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-$name.uc $genus/amplicons/$genus-$name-heatmap.pdf
-
+	
+	T16_HEATMAP_END="$(date +%s)"
+	
+	FULL_LOOP=$[ ${T16_HEATMAP_END} - ${T11_START_LOOP} ]
+	PCR=$[ ${T12_PCR_END} - ${T11_START_LOOP} ]
+	ALN=$[ ${T13_ALN_END} - ${T12_PCR_END} ]
+	VSEARCH=$[ ${T14_VSEARCH_END} - ${T13_ALN_END} ]
+	RFORMAT=$[ ${T15_RFORMAT_END} - ${T14_VSEARCH_END} ]
+	HEATMAP=$[ ${T16_HEATMAP_END} - ${T15_RFORMAT_END} ]
+	
+	echo "FULL LOOP $FULL_LOOP"
+	echo "PCR $PCR"
+	echo "ALN $ALN"
+	echo "VSEARCH $VSEARCH"
+	echo "RFORMAT $RFORMAT"
+	echo "HEATMAP $HEATMAP"
+	
 	echo -e "\n-------------------------------------\n"
+		
 done < $primers
 
 #clean up logs etc
@@ -265,26 +312,6 @@ rm barrnap.log
 
 echo -e "\nDone.\n\n"
 
+TOTAL=$[ ${T16_HEATMAP_END} - ${T1_START} ]
 
-
-STARTUP=$[ ${DL_start} - ${START} ]
-DL=$[ ${DL_end} - ${DL_start} ]
-FORMAT1=$[ ${FORMAT_1_END} - ${DL_start} ]
-BARRNAP=$[ ${BARRNAP_END} - ${FORMAT_1_END} ]
-FORMAT2=$[ ${FORMAT_2_END} - ${BARRNAP_END} ]
-WITHIN=$[ ${WITHIN_AL_END} - ${FORMAT_2_END} ]
-SUM1=$[ ${SUM_1_END} - ${WITHIN_AL_END} ]
-FULL=$[ ${FULL_ALN_END} - ${SUM_1_END} ]
-
-echo "$START"
-echo "$DL"
-echo "$FORMAT1"
-echo "$BARRNAP"
-echo "$FORMAT2"
-echo "$WITHIN"
-echo "$SUM1"
-echo "$FULL"
-
-
-
-
+echo "TOTAL $TOTAL"

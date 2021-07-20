@@ -149,7 +149,7 @@ find $genus/refseq/bacteria/ -name "*gz" | parallel -j $Ncpu 'gunzip {}'
 #renaming fna-files
 echo -e "Renaming fastas and adding GCF (for genomes with multiple chromosomes).\n\n"
 #people should really think about the names they give their genomes
-find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu 'sed -i "s/[:,/()=#\0x27]//g; s/[: ]/_/g" {} '
+find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu 'sed -i "s/[:,/()=#\x27]//g; s/[: ]/_/g" {} '
 find $genus/refseq/bacteria/ -name "*fna" | parallel -j $Ncpu ' GCF=$(echo $(basename $(dirname {})));  sed -E -i "s/^>(.*)/>$GCF"_"\1/g" {} '
 
 T4_FORMAT_1_END="$(date +%s)"
@@ -215,7 +215,7 @@ T9_FULL_ALN_END="$(date +%s)"
 ###
 STARTUP=$[ ${T2_DL_start} - ${T1_START} ]
 DL=$[ ${T3_DL_end} - ${T2_DL_start} ]
-FORMAT1=$[ ${T4_FORMAT_1_END} - ${T3_DL_start} ]
+FORMAT1=$[ ${T4_FORMAT_1_END} - ${T3_DL_end} ]
 BARRNAP=$[ ${T5_BARRNAP_END} - ${T4_FORMAT_1_END} ]
 FORMAT2=$[ ${T6_FORMAT_2_END} - ${T5_BARRNAP_END} ]
 WITHIN=$[ ${T7_WITHIN_AL_END} - ${T6_FORMAT_2_END} ]
@@ -281,7 +281,7 @@ do
 	echo -e "\tMaking amplicon summary file for tree viewer import.\n\n"
 	Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-$name.tree $genus/amplicons/$genus-$name-meta.csv $genus/amplicons/$genus-$name.uc
 
-	T15_RFORMAT_END"$(date +%s)"
+	T15_RFORMAT_END="$(date +%s)"
 
 	echo -e "\tMaking amplicon cluster membership heatmaps.\n\n"
 	Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-$name.uc $genus/amplicons/$genus-$name-heatmap.pdf

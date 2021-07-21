@@ -269,7 +269,7 @@ do
 
 	echo -e "Working on $name-primers:\n\n";
 	
-	echo -e "\tMaking amplicons with in_silico_pcr.\n\n"
+	echo -e "Making amplicons with in_silico_pcr.\n\n"
 	$scriptDir/in_silico_PCR.pl -s $genus/full/$genus.16S -a $forw    -b $rev -r -m -i > $genus/amplicons/$genus-$name.summary 2> $genus/amplicons/$genus-$name.temp.amplicons
 	
 	T12_PCR_END="$(date +%s)"
@@ -285,14 +285,14 @@ do
 	then
 		echo -e "Skipping alignments and trees (if needed, use -m/--msa).\n\n"
 	else
-		echo -e "\tAlligning all amplicons with mafft and building tree with fasttree.\n"
+		echo -e "Alligning all amplicons with mafft and building tree with fasttree.\n"
 		mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-$name.amplicons > $genus/amplicons/$genus-$name.aln
 		fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-$name.aln > $genus/amplicons/$genus-$name.tree
 	fi
 
 	T13_ALN_END="$(date +%s)"
 	
-	echo -e "\n\tMaking unique clusters with vsearch.\n\n"
+	echo -e "\nMaking unique clusters with vsearch.\n\n"
 	mkdir $genus/amplicons/$name-clusters
 	vsearch -cluster_fast $genus/amplicons/$genus-$name.amplicons --id $id  -strand both --uc $genus/amplicons/$genus-$name.uc --clusters $genus/amplicons/$name-clusters/$genus-$name-clus --quiet
 	
@@ -300,13 +300,13 @@ do
 	
 	if [[ $msa = true  ]]
 	then
-		echo -e "\tMaking amplicon summary file for tree viewer import.\n\n"
+		echo -e "Making amplicon summary file for tree viewer import.\n\n"
 		Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-$name.tree $genus/amplicons/$genus-$name-meta.csv $genus/amplicons/$genus-$name.uc
 	fi
 	
 	T15_RFORMAT_END="$(date +%s)"
 
-	echo -e "\tMaking amplicon cluster membership heatmaps.\n\n"
+	echo -e "Making amplicon cluster membership heatmaps.\n\n"
 	Rscript $scriptDir/MakeHeatmap.R $genus/amplicons/$genus-$name.uc $genus/amplicons/$genus-$name-heatmap.pdf
 	
 	T16_HEATMAP_END="$(date +%s)"

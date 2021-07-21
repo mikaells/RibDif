@@ -145,7 +145,7 @@ fi
 T3_DL_end="$(date +%s)"
 
 #save command line
-echo "RibDif.sh --genus $genus --primers $primers --clobber $clobber --ANI $ANI --frag $frag --id $id --threads $Ncpu" > $genus/run_cmd
+echo "RibDif.sh --genus $genus --primers $primers --clobber $clobber --ANI $ANI --frag $frag --msa $msa --id $id --threads $Ncpu" > $genus/run_cmd
 
 #gunzip all in parallel
 echo -e "Gunzipping all files.\n\n"

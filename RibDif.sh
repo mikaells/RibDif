@@ -283,7 +283,7 @@ do
 
 	if [[ $msa = false  ]]
 	then
-		echo -e "Skipping alignments and trees (if needed, use -m/--msa).\n\n"
+		echo -e "Skipping alignments and trees (if needed, use -m/--msa).\n"
 	else
 		echo -e "Alligning all amplicons with mafft and building tree with fasttree.\n"
 		mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-$name.amplicons > $genus/amplicons/$genus-$name.aln

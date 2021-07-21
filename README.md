@@ -69,6 +69,9 @@ rRNA genes is of course cause of some concern. Occasionally, an error occors whe
 [-f|--frag]     
 #off by default, full genomes are required for detecting all 16S-genes, use with caution 
 
+[-m|--msa]     
+#off by default, make multiple sequence alignment and trees.  
+
 [-i|--id]       
 #1 (100% identity) as default, if the final evaluation should be done at amplicons clustered at another identity, 
 like .99 (pretty experimental right now). Does not cluster at the genome level, so beware.
@@ -79,7 +82,7 @@ like .99 (pretty experimental right now). Does not cluster at the genome level, 
 
 ## Output
 
-The program generates a new directory named after the genus in question. Within that is a summary file and three sub-directories.
+The program generates a new directory named after the genus in question. Within that is a summary file and three sub-directories. Many files are only present with all options turned on.
 
 The main files of interest for amplicon metataxonomic analysis is the amplicon/ folder, in which you will find analysis for all all primers. The heatmap pdfs is the most important ones, as they show which species overlap, which is also summarized in the 'XX-overlap-summary.txt' files.
 

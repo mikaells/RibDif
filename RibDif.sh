@@ -11,7 +11,7 @@ T1_START="$(date +%s)"
 
 #Input sanitation
 if [ "$#" -lt 2 ]; then
-	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tenable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
+	echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tenable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-m|--msa\tmake alignments]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
 	exit;
 fi
 
@@ -22,6 +22,7 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 clobber=false
 ANI=false
 frag=false
+msa=false
 id=1
 Ncpu=$( nproc --all )
 primers="$scriptDir/default.primers"
@@ -30,7 +31,7 @@ while :
 do
  case "$1" in
 	-h | --help)
-		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tenable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
+		echo -e "\nUsage is\nRibDif \n\t-g|--genus <genus>\n\t[-c|--clobber\tdelete previous run]\n\t[-p|--primers\tpath to custom primers]\n\t[-a|--ANI\tenable ANI]\n\t[-f|--frag\tinclude non-complete genomes]\n\t[-m|--msa\tmake alignments]\n\t[-i|--id\tclustering cutoff <0.5-1>]\n\t[-t|--threads\tthreads]\n\n"
 		exit 0
 		;;
 	-g | --genus)
@@ -46,6 +47,10 @@ do
 		shift
 		;;
 	-f | --frag)
+		frag=true
+		shift
+		;;
+	-m | --msa)
 		frag=true
 		shift
 		;;
@@ -206,9 +211,19 @@ wait;
 mkdir $genus/full
 find $genus/refseq/bacteria/ -name "*16S" -exec cat {}  \; > $genus/full/$genus.16S
 
-echo -e "Alligning all 16S rRNA genes with mafft and building tree with fasttree.\n"
-mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/full/$genus.16S > $genus/full/$genus.aln
-fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
+
+#calculating ANI for each genome
+if [[ $msa = false  ]]
+then
+	echo -e "Skipping alignments and trees (if needed, use -m/--msa).\n\n"
+else
+	echo -e "Alligning all 16S rRNA genes with mafft and building tree with fasttree.\n"
+	mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/full/$genus.16S > $genus/full/$genus.aln
+	fasttree -quiet -nopr -gtr -nt $genus/full/$genus.aln > $genus/full/$genus.tree
+fi
+
+
+
 
 T9_FULL_ALN_END="$(date +%s)"
 
@@ -266,9 +281,14 @@ do
 	rm $genus/amplicons/$genus-$name.temp.amplicons
 	rm $genus/amplicons/$genus-$name.summary
 
-	echo -e "\tAlligning all amplicons with mafft and building tree with fasttree.\n"
-	mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-$name.amplicons > $genus/amplicons/$genus-$name.aln
-	fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-$name.aln > $genus/amplicons/$genus-$name.tree
+	if [[ $msa = false  ]]
+	then
+		echo -e "Skipping alignments and trees (if needed, use -m/--msa).\n\n"
+	else
+		echo -e "\tAlligning all amplicons with mafft and building tree with fasttree.\n"
+		mafft --auto --quiet --adjustdirection --thread $Ncpu $genus/amplicons/$genus-$name.amplicons > $genus/amplicons/$genus-$name.aln
+		fasttree -quiet -nopr -gtr -nt $genus/amplicons/$genus-$name.aln > $genus/amplicons/$genus-$name.tree
+	fi
 
 	T13_ALN_END="$(date +%s)"
 	
@@ -278,9 +298,12 @@ do
 	
 	T14_VSEARCH_END="$(date +%s)"
 	
-	echo -e "\tMaking amplicon summary file for tree viewer import.\n\n"
-	Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-$name.tree $genus/amplicons/$genus-$name-meta.csv $genus/amplicons/$genus-$name.uc
-
+	if [[ $msa = true  ]]
+	then
+		echo -e "\tMaking amplicon summary file for tree viewer import.\n\n"
+		Rscript $scriptDir/Format16STrees.R $genus/amplicons/$genus-$name.tree $genus/amplicons/$genus-$name-meta.csv $genus/amplicons/$genus-$name.uc
+	fi
+	
 	T15_RFORMAT_END="$(date +%s)"
 
 	echo -e "\tMaking amplicon cluster membership heatmaps.\n\n"

@@ -51,7 +51,7 @@ do
 		shift
 		;;
 	-m | --msa)
-		frag=true
+		msa=true
 		shift
 		;;
 	-i | --id)

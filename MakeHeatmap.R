@@ -161,6 +161,12 @@ names(annot_cols$Species)=unique(rowAnnot$Species)
 #overwrite '.sp' as grey
 annot_cols$Species[which(names(annot_cols$Species)=="sp.")]="grey"
 
+#create cluster objects for heatmap on binary data
+binClusterMat=ifelse(clusterMat>0,1,0)
+
+colClusterMat=hclust(dist(t(binClusterMat)),"ward.D2")
+rowClusterMat=hclust(dist(binClusterMat),"ward.D2")
+
 #####
 #Make heatmaps
 #####
@@ -170,8 +176,8 @@ annot_cols$Species[which(names(annot_cols$Species)=="sp.")]="grey"
 pdf(outPath, onefile=T)
 setHook("grid.newpage", function() pushViewport(viewport(x=1,y=1,width=1, height=0.99, name="vp", just=c("right","top"))), action="prepend")
 
-pheatmap(clusterMat, cluster_rows = T, fontsize_col = 6,fontsize_row = 8, fontsize = 8,
-         cluster_cols = T, display_numbers = F,annotation_colors =annot_cols,labels_row = rowAnnot$Species,  
+pheatmap(clusterMat, cluster_rows = rowClusterMat, fontsize_col = 6,fontsize_row = 8, fontsize = 8,
+         cluster_cols = colClusterMat, display_numbers = F,annotation_colors =annot_cols,labels_row = rowAnnot$Species,  
          number_format = "%.0f", annotation_row = rowAnnot, clustering_method = "ward.D2" )
 
 setHook("grid.newpage", NULL, "replace")

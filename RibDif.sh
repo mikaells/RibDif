@@ -238,13 +238,13 @@ SUM1=$[ ${T8_SUM_1_END} - ${T7_WITHIN_AL_END} ]
 FULL=$[ ${T9_FULL_ALN_END} - ${T8_SUM_1_END} ]
 
 #echo "$START"
-echo "DL $DL"
-echo "FORMAT1 $FORMAT1"
-echo "BARNAPP $BARRNAP"
-echo "FORMAT2 $FORMAT2"
-echo "WITHIN $WITHIN"
-echo "SUM1 $SUM1"
-echo "FULL $FULL"
+#echo "DL $DL"
+#echo "FORMAT1 $FORMAT1"
+#echo "BARNAPP $BARRNAP"
+#echo "FORMAT2 $FORMAT2"
+#echo "WITHIN $WITHIN"
+#echo "SUM1 $SUM1"
+#echo "FULL $FULL"
 
 
 if [[ $primers = "$scriptDir/default.primers" ]]
@@ -318,12 +318,12 @@ do
 	RFORMAT=$[ ${T15_RFORMAT_END} - ${T14_VSEARCH_END} ]
 	HEATMAP=$[ ${T16_HEATMAP_END} - ${T15_RFORMAT_END} ]
 	
-	echo "FULL LOOP $FULL_LOOP"
-	echo "PCR $PCR"
-	echo "ALN $ALN"
-	echo "VSEARCH $VSEARCH"
-	echo "RFORMAT $RFORMAT"
-	echo "HEATMAP $HEATMAP"
+	#echo "FULL LOOP $FULL_LOOP"
+	#echo "PCR $PCR"
+	#echo "ALN $ALN"
+	#echo "VSEARCH $VSEARCH"
+	#echo "RFORMAT $RFORMAT"
+	#echo "HEATMAP $HEATMAP"
 	
 	echo -e "\n-------------------------------------\n"
 		
@@ -337,4 +337,4 @@ echo -e "\nDone.\n\n"
 
 TOTAL=$[ ${T16_HEATMAP_END} - ${T1_START} ]
 
-echo "TOTAL $TOTAL"
+#echo "TOTAL $TOTAL"

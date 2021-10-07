@@ -1,5 +1,5 @@
 # RibDif
-RibDif evaluates the differences in 16S ribosomal RNA genes within a genus or species.
+RibDif evaluates the differences in 16S ribosomal RNA genes within a genus or species. See the full paper for details: https://academic.oup.com/bioinformaticsadvances/article/1/1/vbab020/6364919
 
 Takes an input genus and returns a large set of analysed files, the main being heatmaps comparing amplicons of 16S rRNA genes. Default amplicons are V3V4 and V1V9, but 
 custom primers can be optionally be supplied.

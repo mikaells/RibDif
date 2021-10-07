@@ -140,7 +140,7 @@ A more concise view of which genomes overlap. Evidently, multiple species cannot
 ![My image](https://github.com/mikaells/RibDif/blob/master/img/Pseudoalteromonas-V3V4_confusionmat.png)
 
 
-RibDif gives the following overlap summary which may be easier to parse for large genera:
+RibDif gives the following overlap summary which may be easier to parse for large genera ('sp.' are unamed species): 
 
     Summary:
     

@@ -6,6 +6,8 @@ custom primers can be optionally be supplied.
 
 This can be useful for determining if species resolution is possible within certain genera using common metataxonomic approaches. Often they are not.
 
+Ribdif runs in Linux and installs through conda (https://docs.conda.io/en/latest/) in a couple of minutes. It has been tested on Ubuntu 18.04 and 20.04, other distros 
+may or may not work
 
 ## Installation
 

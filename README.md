@@ -132,7 +132,7 @@ The tree files are just newick-files and can be used in any treeviewer or R. The
 
 # Example output
 
-V3V4 amplicons generated from the Pseudoalteromonas genus results in 51 unique alleles, and these are identical multiple species such as the allele found in agarivorans/atlantica/carrageenovora/espejiana/issachenkonii/tetraodonis, which hence cannot be seperated using V3V4 sequencing. Moreover, several genomes have multiple distinct alleles, which will artificially overinflate diversity estimates. Additionally, some genomes have alleles shared with different species, such as a genome of P. arctica which has alleles seperately shared with P. translucida and P. nigrifaciens. V3V4 amplicons from this genome would erronously suggest that three different species are present.
+V3V4 amplicons generated from the Pseudoalteromonas genus results in 51 unique alleles, and these are identical in multiple species such as the allele found in agarivorans/atlantica/carrageenovora/espejiana/issachenkonii/tetraodonis, which hence cannot be seperated using V3V4 sequencing. Moreover, several genomes have multiple distinct alleles, which will artificially overinflate diversity estimates. Additionally, some genomes have alleles shared with different species, such as a genome of P. arctica which has alleles seperately shared with P. translucida and P. nigrifaciens. V3V4 amplicons from this genome would erronously suggest that three different species are present.
 
 ![My image](https://github.com/mikaells/RibDif/blob/master/img/Pseudoalteromonas-V3V4_clusterdistri.png)
 

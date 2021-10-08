@@ -176,4 +176,4 @@ E.G if you want to look at the v3v4 amplicons of B. subtilis from a Bacillus run
 
 Rscript ~/RibDif/MakeSpeciesHeatmap.R amplicons/Bacillus-v3v4.uc subtilis
 
-Turns out most of the reported overlap is because of a couple of odd (wrongly annotated genomes?) are mucking up the conclusion
+Turns out most of the reported overlap, in this case, is because of a couple of odd (wrongly annotated genomes?) are mucking up the conclusion

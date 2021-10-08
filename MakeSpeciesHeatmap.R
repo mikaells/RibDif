@@ -18,13 +18,6 @@ ucPath  = args[1] #vsearch clusters (.uc-file)
 species = args[2] # e.g subtilis
 outPath = str_replace(string = ucPath,pattern = ".uc",replacement = paste("-",species,".pdf",sep=""))
 
-#delete
-ucPath="c:/Users/milst/Desktop/Bacillus/Bacillus-v3v4.uc"
-species =  "subtilis"
-outPath = str_replace(string = ucPath,pattern = ".uc",replacement = paste("-",species,".pdf",sep=""))
-
-
-
 #####
 #Read and clean-up .uc-file
 #####

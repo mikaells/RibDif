@@ -54,6 +54,7 @@ Running Ruegeria will take less than a minute, while large genera like Bacillus 
 In some genera, unspecific R-errors are thrown. It is caused by some genomes having no rRNA genes, but causes no problems downstream. How a completed genome can have no 
 rRNA genes is of course cause of some concern. Occasionally, an error occors when people have used weird characters in their genome names. I have tried parsing all cases, but people are suprisingly creative when it comes to naming schemes.
 
+Looking at individual species can be done with MakeSpeciesHeatmap.R, see below.
 
 ## Full set of options:
 
@@ -166,3 +167,13 @@ RibDif gives the following overlap summary which may be easier to parse for larg
 	ruthenica/sp.
 	marina/sp.
 
+# Helper scripts
+If you have a favorite species within a large genus, you can use the MakeSpeciesHeatmap.R script to fish it out. Sometimes wrongly annotated genomes can really throw the logic of RibDif off, so you can have a look at your species here. This will make a heatmap of the clusters of your species and the genomes for which it overlaps and you can see if you really have species overlap. Maybe it's not that bad.
+
+Rscript ~/RibDif/MakeSpeciesHeatmap.R UC-FILE SPECIES
+
+E.G if you want to look at the v3v4 amplicons of B. subtilis from a Bacillus run, you do
+
+Rscript ~/RibDif/MakeSpeciesHeatmap.R amplicons/Bacillus-v3v4.uc subtilis
+
+Turns out most of the reported overlap is because of a couple of odd (wrongly annotated genomes?) are mucking up the conclusion

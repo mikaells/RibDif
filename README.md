@@ -168,12 +168,10 @@ RibDif gives the following overlap summary which may be easier to parse for larg
 	marina/sp.
 
 # Helper scripts
-If you have a favorite species within a large genus, you can use the MakeSpeciesHeatmap.R script to fish it out. Sometimes wrongly annotated genomes can really throw the logic of RibDif off, so you can have a look at your species here. This will make a heatmap of the clusters of your species and the genomes for which it overlaps and you can see if you really have species overlap. Maybe it's not that bad.
+If you have a favorite species within a large genus, you can use the MakeSpeciesHeatmap.R script to fish it out. Sometimes wrongly annotated genomes can really throw the logic of RibDif off, so you can have a look at your species here. This will make a heatmap of the clusters of your species and the genomes for which it overlaps and you can see if you really have species overlap. Remember to take into account that some species have many more genomes available than others and that can also skew the visual interpretation
 
 Rscript ~/RibDif/MakeSpeciesHeatmap.R UC-FILE SPECIES
 
 E.G if you want to look at the v3v4 amplicons of B. subtilis from a Bacillus run, you do
 
 Rscript ~/RibDif/MakeSpeciesHeatmap.R amplicons/Bacillus-v3v4.uc subtilis
-
-Turns out most of the reported overlap, in this case, is because of a couple of odd (wrongly annotated genomes?) are mucking up the conclusion

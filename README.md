@@ -32,7 +32,7 @@ chmod 755 RibDif/*
 parallel --citation   
 
 
-Note: in_silico_PCR.pl is borrowed from https://github.com/egonozer/in_silico_pcr
+Note: in_silico_PCR.pl is gratefully borrowed from https://github.com/egonozer/in_silico_pcr
 
 
 ## Usage

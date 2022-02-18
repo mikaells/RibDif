@@ -68,7 +68,7 @@ Looking at individual species can be done with MakeSpeciesHeatmap.R, see below.
 #Path to custom primer-file, must be a tab seperated file with name, forward and reverse primers. See the file 'v3v4.primers' 
 
 [-a|--ANI]      
-#ANI is off by default, turn on if you care about individual genomes
+#ANI is off by default, turn on if you care about individual genomes. The $genus-summary.csv-file will only contain a list of genomes when off. 
 
 [-f|--frag]     
 #off by default, full genomes are required for detecting all 16S-genes, use with caution 
@@ -123,7 +123,7 @@ refseq/bacteria/ #contains a folder for each genome, named after refseq-identifi
     ani/ # files generated from pyani
 
 
-$genus-summary.csv # contains summary statistics for each genome. Columns 5-8 are in nucleotide mismatches between the genomes' 16S genes, TotalDiv is the cummulative shannon index
+$genus-summary.csv # contains summary statistics for each genome. Columns 5-8 are in nucleotide mismatches between the genomes' 16S genes, TotalDiv is the cummulative shannon index. Will only contain the genomes and species unless --ANI is on.
  
     #GCF     Genus   Species #16S    Mean    SD      Min     Max   TotalDiv 
 

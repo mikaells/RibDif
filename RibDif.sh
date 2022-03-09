@@ -117,7 +117,7 @@ then
 	fi
 elif [[ -d $genus ]]
 then
-	echo -e "$genus-folder already exists, run again with c/--clobber  or find another folder to run in.\n\n"
+	echo -e "$genus-folder already exists, run again with c/--clobber or find another folder to run in.\n\n"
 	exit
 fi
 

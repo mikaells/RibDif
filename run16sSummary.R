@@ -58,7 +58,7 @@ if(file.exists(mismatchPath)) {
     #looping across all nucleotide positions
     for( i in 1:max_len) {
       #turn each position into a table with of counts for each nucleotide, while including 0s.
-      per_pos=factor(DNA_mat[,i], levels=c("A","G", "C", "T", "-"))
+      per_pos=factor(toupper(DNA_mat[,i]), levels=c("A","G", "C", "T", "-"))
       probs=table(per_pos)/n_seqs
       divs[i]=-sum(probs*ifelse(log(probs)==-Inf, 0, log(probs))) #shannon index
     }
@@ -87,5 +87,5 @@ if(file.exists(mismatchPath)) {
   } 
   
 } else {
-  cat(paste(GCF,gen,spec, 0, 0,0,0,0, 0,'\n',sep='\t')) 
+  cat(paste(GCF,gen,spec,length(read.fasta(alignmentPath)) , "-","-","-","-", "-",'\n',sep='\t')) 
 }

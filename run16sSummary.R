@@ -5,7 +5,7 @@ library(zoo, quietly = T, warn.conflicts = FALSE)
 library(ape, quietly = T, warn.conflicts = FALSE)
 
 args=commandArgs(trailingOnly = TRUE);
-par(mar = c(2.5, 2.5, 1.8,.5), family="serif", mfrow=c(2,1),mgp = c(1.3, 0.3, 0), font.lab=2)
+
 
 
 mismatchPath  =args[1]
@@ -75,6 +75,7 @@ if(file.exists(mismatchPath)) {
     
     pdf(file = pngOut,width = 7.4,height = 5)
     par(mfrow=c(1,2))
+    par(mar = c(2.5, 2.5, 1.8,.5), family="serif", mfrow=c(2,1),mgp = c(1.3, 0.3, 0), font.lab=2)
     
     plot(divs, pch=16, cex=0.1, type="p", main="Diversity", xlab="Nucleotide position", ylab="Diversity")
     lines(roll_means_30, col=3)

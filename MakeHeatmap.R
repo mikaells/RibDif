@@ -90,7 +90,7 @@ combinations=c()
 #loop throug all columns of clusterMat, e.g. all .uc-clusters
 for(i in 1:NCOL(clusterMat)) {
   #find all row indeces (GCFs) which have a least 1 member in cluster
-  clustMatch=which(clusterMat[,i]>1)
+  clustMatch=which(clusterMat[,i]>0)
   #find unique species in this cluster
   unqSpecCluster=unique(rowAnnotVec[clustMatch])
   #if there are more than 1 species in the cluster

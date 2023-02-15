@@ -195,7 +195,7 @@ else
 fi
 
 echo -e "Alligning full-length 16S genes within genomes with muscle and building trees with fastree.\n"
-find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu 'muscle -in {} -out {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
+find $genus/refseq/bacteria/ -name "*.16S" | parallel -j $Ncpu 'muscle -align {} -output {.}.16sAln -quiet; sed -i "s/[ ,]/_/g" {.}.16sAln; fasttree -quiet -nopr -gtr -nt {.}.16sAln > {.}.16sTree '
 
 T7_WITHIN_AL_END="$(date +%s)"
 

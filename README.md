@@ -65,7 +65,7 @@ Looking at individual species can be done with MakeSpeciesHeatmap.R, see below.
 #Delete previous run
 
 [-p|--primers]   
-#Path to custom primer-file, must be a tab seperated file with name, forward and reverse primers. See the file 'v3v4.primers' 
+#Path to custom primer-file, must be a tab seperated file with name, forward and reverse primers. See the file 'default.primers' 
 
 [-a|--ANI]      
 #ANI is off by default, turn on if you care about individual genomes. The $genus-summary.csv-file will only contain a list of genomes when off. 

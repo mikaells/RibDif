@@ -1,9 +1,8 @@
 name: RibDif
 channels:
-  - conda-forge
   - bioconda
+  - conda-forge
   - defaults
-  - r
 dependencies:
   - _libgcc_mutex=0.1=conda_forge
   - _openmp_mutex=4.5=2_gnu
@@ -24,9 +23,9 @@ dependencies:
   - bwidget=1.9.14=ha770c72_1
   - bzip2=1.0.8=h7f98852_4
   - c-ares=1.18.1=h7f98852_0
-  - ca-certificates=2023.01.10=h06a4308_0
+  - ca-certificates=2024.7.2=h06a4308_0
   - cairo=1.16.0=ha61ee94_1014
-  - certifi=2022.12.7=pyhd8ed1ab_0
+  - certifi=2024.7.4=py311h06a4308_0
   - cffi=1.15.1=py311h409f033_3
   - cfitsio=4.2.0=hd9d235c_0
   - charset-normalizer=2.1.1=pyhd8ed1ab_0
@@ -124,13 +123,13 @@ dependencies:
   - mummer=3.23=4
   - munkres=1.1.4=pyh9f0ad1d_0
   - muscle=5.1=h9f5acd7_1
-  - ncbi-genome-download=0.3.1=pyh5e36f6f_0
+  - ncbi-genome-download=0.3.3=pyh7cba7a3_0
   - ncurses=6.4=h6a678d5_0
   - nspr=4.35=h27087fc_0
   - nss=3.88=he45b914_0
   - numpy=1.24.2=py311h8e6699e_0
   - openjpeg=2.5.0=hfec8fc6_2
-  - openssl=3.0.8=h0b41bf4_0
+  - openssl=3.0.14=h5eee18b_0
   - packaging=23.0=pyhd8ed1ab_0
   - pandas=1.5.3=py311h2872171_0
   - pango=1.50.12=hd33c08f_1
